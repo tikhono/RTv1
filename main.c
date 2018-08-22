@@ -1,3 +1,6 @@
+#include "main.h"
+#include "libft.h"
+
 int		main(void)
 {
 

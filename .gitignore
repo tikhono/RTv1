@@ -1,5 +1,5 @@
-*
-!*.c
-!*.h
-!Makefile
-!author
+./*
+!*/*.c
+!*/*.h
+!*/Makefile
+!*/author
