@@ -3,17 +3,17 @@
 #include <string.h>
 #include "test.h"
 
-inline int stack_top (struct Stack *s) { return s->vtable->top(s); }
-inline void stack_pop (struct Stack *s) { s->vtable->pop(s); }
-inline void stack_push (struct Stack *s, int x) { s->vtable->push(s, x); }
-inline int stack_empty (struct Stack *s) { return s->vtable->empty(s); }
-inline int stack_full (struct Stack *s) { return s->vtable->full(s); }
-inline void stack_destroy (struct Stack *s) { s->vtable->destroy(s); }
+int stack_top (struct Stack *s) { return s->vtable->top(s); }
+void stack_pop (struct Stack *s) { s->vtable->pop(s); }
+void stack_push (struct Stack *s, int x) { s->vtable->push(s, x); }
+int stack_empty (struct Stack *s) { return s->vtable->empty(s); }
+int stack_full (struct Stack *s) { return s->vtable->full(s); }
+void stack_destroy (struct Stack *s) { s->vtable->destroy(s); }
 
 
 static int stack_array_top (struct Stack *s) { /* ... */ }
 static void stack_array_pop (struct Stack *s) { /* ... */ }
-static void stack_array_push (struct Stack *s, int x) { /* ... */ }
+static void stack_array_push (struct Stack *s, int x) {printf("pushed in array\n");}
 static int stack_array_full (struct Stack *s) { /* ... */ }
 static void stack_array_destroy (struct Stack *s) { /* ... */ }
 
@@ -40,7 +40,7 @@ struct Stack * stack_array_create ()
 
 static int stack_list_top (struct Stack *s) { /* ... */ }
 static void stack_list_pop (struct Stack *s) { /* ... */ }
-static void stack_list_push (struct Stack *s, int x) { /* ... */ }
+static void stack_list_push (struct Stack *s, int x) {printf("pushed in list\n");}
 static int stack_list_full (struct Stack *s) { /* ... */ }
 static void stack_list_destroy (struct Stack *s) { /* ... */ }
 
@@ -65,11 +65,10 @@ struct Stack * stack_list_create () {
 
 int		main(void)
 {
-
 	struct Stack *s1 = stack_array_create();
 	struct Stack *s2 = stack_list_create();
 
-//	stack_push(s1, 1);
-//	stack_push(s2, 1);
+	stack_push(s1, 1);
+	stack_push(s2, 1);
 }
 
