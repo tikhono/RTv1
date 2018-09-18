@@ -1,0 +1,1 @@
+gcc main.c hookers.c vec_comp.c -lmlx -lXext -lX11 -L/usr/include -I/usr/include -lm; ./a.out
