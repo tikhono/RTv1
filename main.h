@@ -1,15 +1,18 @@
 #ifndef MAIN_H
 # define MAIN_H
+# define WIDTH 1000
+# define HEIGHT 1000
+# define BACKGROUND 0x0F0F0F
 # include <math.h>
 # include <stdio.h>
-# include "./mlx/mlx.h"
+# include <mlx.h>
 # include "./libft/libft.h"
 
 typedef struct	s_vec3
 {
-	int			x;
-	int			y;
-	int			z;
+	double		x;
+	double		y;
+	double		z;
 }				t_vec3;
 
 typedef struct	s_sphere
@@ -21,9 +24,6 @@ typedef struct	s_sphere
 
 typedef struct	s_data
 {
-	int			width;
-	int			height;
-	int			background_color;
 	int			arr_lenth;
 	double		viewport_size;
 	double		projection_plane_z;
@@ -37,13 +37,15 @@ typedef struct	s_mlx
 	void		*mlx;
 	void		*win;
 	void		*img;
-	int			*addr;
+	int			x;
+	int			y;
+	int			z;
 }				t_mlx;
 
 typedef struct	s_all
 {
-	t_mlx		*p;
-	t_data		*d;
+	t_mlx		p;
+	t_data		d;
 	int			*addr;
 }				t_all;
 
