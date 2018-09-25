@@ -5,7 +5,6 @@ void	set_direction(t_all *a, int x, int y)
 	a->d.direction.x = x * a->d.viewport_size / WIDTH;
 	a->d.direction.y = y * a->d.viewport_size / HEIGHT;
 	a->d.direction.z = a->d.projection_plane_z;
-	//a->d.direction = (t_vec3){x * 1.0 / WIDTH, y * 1.0 / HEIGHT, 1.0};
 }
 
 void	get_intersections(t_all *a, t_sphere *sphere, double *intersection1, double *intersection2)
@@ -34,12 +33,13 @@ void	put_pixel(t_all *a, int x, int y, int color)
 	x += WIDTH / 2;
 	y += HEIGHT / 2;
 	len = y * WIDTH + x;
-	if (len < HEIGHT * WIDTH && len >= 0)
+	//if (len < HEIGHT * WIDTH && len >= 0)
 		a->addr[len] = color;
 }
 
-void	trace_ray(t_all *a, int x, int y, int i)
+void	trace_ray(t_all *a, int x, int y)
 {
+	int 		i;
 	double		min;
 	double		max;
 	double		intersection1;
@@ -68,31 +68,24 @@ void	trace_ray(t_all *a, int x, int y, int i)
 		++i;
 	}
 	if (closest_sphere == NULL)
-	{
 		put_pixel(a, x, y, BACKGROUND);
-		printf("back\n");
-	}
 	else
-	{
-		put_pixel(a, x, y, a->d.arr[i].color);
-		printf("obj\n");
-	}
+		put_pixel(a, x, y, closest_sphere->color);
 }
 
 void	render(t_all *a)
 {
 	int	x;
 	int	y;
-	int	i;
 
 	x = -WIDTH / 2;
-	while (x < WIDTH / 2)
+	while (x <= WIDTH / 2)
 	{
 		y = -HEIGHT / 2;
-		while (y < HEIGHT / 2)
+		while (y <= HEIGHT / 2)
 		{
 			set_direction(a, x, y);
-			trace_ray(a, x, y, i);
+			trace_ray(a, x, y);
 			++y;
 		}
 		++x;
@@ -111,20 +104,17 @@ void	init(t_all *a)
 	a->d.camera_pos.x = 0;
 	a->d.camera_pos.y = 0;
 	a->d.camera_pos.z = 0;
-	a->d.arr_lenth = 1;
+	a->d.arr_lenth = 2;
 	a->d.arr = (t_sphere *)malloc(sizeof(t_sphere) * a->d.arr_lenth);
-	a->d.arr[0] = (t_sphere){{0, 0, 2}, 3, 0xFF00FF};
-//	a->d.arr[1] = (t_sphere){{0, 0, 1}, 1, 0x00FF00};
-//	a->d.arr[2] = (t_sphere){{1, 0, 0}, 2, 0x0000FF};
+	a->d.arr[0] = (t_sphere){{0.0, -1.0, 3.0}, 1.0, 0xff0000};
+	a->d.arr[1] = (t_sphere){{2.0, 0.0, 4.0}, 1.0, 0x00ff00};
+	a->d.arr[2] = (t_sphere){{-2.0, 0.0, 4.0}, 1.0, 0x0000ff};
 }
 
 int		main(int ac, char **av)
 {
 	t_all	a;
 
-//	a = (t_all *)malloc(sizeof(t_all));
-//	a->p = (t_mlx *)malloc(sizeof(t_mlx));
-//	a.d = (t_data *)malloc(sizeof(t_data));
 	init(&a);
 	render(&a);
 	mlx_hook(a.p.win, 2, 5, call_hookers, &a);

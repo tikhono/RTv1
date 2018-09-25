@@ -1,8 +1,9 @@
 #ifndef MAIN_H
 # define MAIN_H
-# define WIDTH 1000
-# define HEIGHT 1000
-# define BACKGROUND 0x0F0F0F
+# define WIDTH 500
+# define HEIGHT 500
+# define BACKGROUND 0
+
 # include <math.h>
 # include <stdio.h>
 # include <mlx.h>
@@ -18,7 +19,7 @@ typedef struct	s_vec3
 typedef struct	s_sphere
 {
 	t_vec3		center;
-	int			radius;
+	double		radius;
 	int			color;
 }				t_sphere;
 
@@ -52,7 +53,7 @@ typedef struct	s_all
 int				call_hookers(int key, t_all *a);
 int				exit_mouse(void);
 
-int				product(t_vec3 a, t_vec3 b);
+double			product(t_vec3 a, t_vec3 b);
 t_vec3			substract(t_vec3 a, t_vec3 b);
 
 #endif
