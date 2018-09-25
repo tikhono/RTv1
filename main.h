@@ -17,6 +17,12 @@ typedef struct	s_vec3
 	double		z;
 }				t_vec3;
 
+typedef struct	s_light
+{
+	t_vec3		center;
+	double		intensity;
+}				t_light;
+
 typedef struct	s_sphere
 {
 	t_vec3		center;
@@ -26,12 +32,14 @@ typedef struct	s_sphere
 
 typedef struct	s_data
 {
-	int			arr_lenth;
+	int			obj_arr_length;
+	int 		light_arr_length;
 	double		viewport_size;
 	double		projection_plane_z;
 	t_vec3		camera_pos;
 	t_vec3		direction;
 	t_sphere	*arr;
+	t_light		*light;
 }				t_data;
 
 typedef struct	s_mlx
@@ -55,6 +63,9 @@ int				call_hookers(int key, t_all *a);
 int				exit_mouse(void);
 
 double			product(t_vec3 a, t_vec3 b);
+double 			length(t_vec3);
 t_vec3			substract(t_vec3 a, t_vec3 b);
+t_vec3			add(t_vec3 a, t_vec3 b);
+t_vec3			multiply(t_vec3 a, double k);
 
 #endif

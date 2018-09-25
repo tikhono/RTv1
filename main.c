@@ -51,7 +51,7 @@ void	trace_ray(t_all *a, int x, int y)
 	closest_intersection = INFINITY;
 	closest_sphere = NULL;
 	i = 0;
-	while (i < a->d.arr_lenth)
+	while (i < a->d.obj_arr_length)
 	{
 		get_intersections(a, &a->d.arr[i], &intersection1, &intersection2);
 		if (intersection1 < closest_intersection && min < intersection1 && intersection1 < max)
@@ -69,7 +69,17 @@ void	trace_ray(t_all *a, int x, int y)
 	if (closest_sphere == NULL)
 		put_pixel(a, x, y, BACKGROUND);
 	else
+	{
+		/*
+		 * point = Add(origin, Multiply(closest_t))
+		 *
+		 * var point = Add(origin, Multiply(closest_t, direction));
+		 * var normal = Subtract(point, closest_sphere.center);
+		 * normal = Multiply(1.0 / Length(normal), normal);
+		 * return Multiply(ComputeLighting(point, normal), closest_sphere.color);
+		 */
 		put_pixel(a, x, y, closest_sphere->color);
+	}
 }
 
 void	render(t_all *a)
@@ -103,11 +113,14 @@ void	init(t_all *a)
 	a->d.camera_pos.x = 0;
 	a->d.camera_pos.y = 0;
 	a->d.camera_pos.z = 0;
-	a->d.arr_lenth = 3;
-	a->d.arr = (t_sphere *)malloc(sizeof(t_sphere) * a->d.arr_lenth);
+	a->d.obj_arr_length = 3;
+	a->d.arr = (t_sphere *)malloc(sizeof(t_sphere) * a->d.obj_arr_length);
 	a->d.arr[0] = (t_sphere){{0.0, -1.0, 3.0}, 1.0, 0xff0000};
 	a->d.arr[1] = (t_sphere){{2.5, 0.0, 4.0}, 1.0, 0x00ff00};
 	a->d.arr[2] = (t_sphere){{-2.0, 0.0, 4.0}, 1.0, 0x0000ff};
+	a->d.light_arr_length = 1;
+	a->d.light = (t_light *)malloc(sizeof(t_light) * a->d.light_arr_length);
+	a->d.light[0] = (t_light){{0.0, -1.0, 3.0}, 1.0};
 }
 
 int		main(int ac, char **av)
