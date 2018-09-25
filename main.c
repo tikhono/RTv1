@@ -33,8 +33,7 @@ void	put_pixel(t_all *a, int x, int y, int color)
 	x += WIDTH / 2;
 	y += HEIGHT / 2;
 	len = y * WIDTH + x;
-	//if (len < HEIGHT * WIDTH && len >= 0)
-		a->addr[len] = color;
+	a->addr[len] = color;
 }
 
 void	trace_ray(t_all *a, int x, int y)
@@ -104,10 +103,10 @@ void	init(t_all *a)
 	a->d.camera_pos.x = 0;
 	a->d.camera_pos.y = 0;
 	a->d.camera_pos.z = 0;
-	a->d.arr_lenth = 2;
+	a->d.arr_lenth = 3;
 	a->d.arr = (t_sphere *)malloc(sizeof(t_sphere) * a->d.arr_lenth);
 	a->d.arr[0] = (t_sphere){{0.0, -1.0, 3.0}, 1.0, 0xff0000};
-	a->d.arr[1] = (t_sphere){{2.0, 0.0, 4.0}, 1.0, 0x00ff00};
+	a->d.arr[1] = (t_sphere){{2.5, 0.0, 4.0}, 1.0, 0x00ff00};
 	a->d.arr[2] = (t_sphere){{-2.0, 0.0, 4.0}, 1.0, 0x0000ff};
 }
 

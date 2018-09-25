@@ -1,7 +1,8 @@
 #ifndef MAIN_H
 # define MAIN_H
-# define WIDTH 500
-# define HEIGHT 500
+# define WIDTH 555
+//with even numbers last right vertical column appear on other side of img
+# define HEIGHT 555
 # define BACKGROUND 0
 
 # include <math.h>
