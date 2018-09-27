@@ -36,6 +36,29 @@ void	put_pixel(t_all *a, int x, int y, int color)
 	a->addr[len] = color;
 }
 
+
+double	compute_lighting(t_all *a, t_vec3 point, t_vec3 normal)
+{
+	double	intensity;
+	double	length_n;
+	double	n_dot_l;
+	t_vec3	vec_l;
+	int		i;
+
+	intensity = 0;
+	length_n = length(normal);
+	i = 0;
+	while (i < a->d.light_arr_length)
+	{
+		vec_l = substract(a->d.light[i].center, point);
+		n_dot_l = product(normal, vec_l);
+		if (n_dot_l > 0)
+			intensity += a->d.light[i].intensity * n_dot_l / (length_n * length(vec_l));
+		++i;
+	}
+	return (intensity);
+}
+
 void	trace_ray(t_all *a, int x, int y)
 {
 	int 		i;
@@ -70,15 +93,10 @@ void	trace_ray(t_all *a, int x, int y)
 		put_pixel(a, x, y, BACKGROUND);
 	else
 	{
-		/*
-		 * point = Add(origin, Multiply(closest_t))
-		 *
-		 * var point = Add(origin, Multiply(closest_t, direction));
-		 * var normal = Subtract(point, closest_sphere.center);
-		 * normal = Multiply(1.0 / Length(normal), normal);
-		 * return Multiply(ComputeLighting(point, normal), closest_sphere.color);
-		 */
-		put_pixel(a, x, y, closest_sphere->color);
+		t_vec3 point = add(a->d.camera_pos, multiply(a->d.direction, closest_intersection));
+		t_vec3 normal = substract(point, closest_sphere->center);
+		normal = multiply(normal, 1.0 / length(normal));
+		put_pixel(a, x, y, compute_lighting(a, point, normal) * closest_sphere->color);
 	}
 }
 

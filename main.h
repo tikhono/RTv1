@@ -7,7 +7,7 @@
 
 # include <math.h>
 # include <stdio.h>
-# include <mlx.h>
+# include "./mlx/mlx.h"
 # include "./libft/libft.h"
 
 typedef struct	s_vec3
@@ -61,9 +61,8 @@ typedef struct	s_all
 
 int				call_hookers(int key, t_all *a);
 int				exit_mouse(void);
-
 double			product(t_vec3 a, t_vec3 b);
-double 			length(t_vec3);
+double 			length(t_vec3 a);
 t_vec3			substract(t_vec3 a, t_vec3 b);
 t_vec3			add(t_vec3 a, t_vec3 b);
 t_vec3			multiply(t_vec3 a, double k);
