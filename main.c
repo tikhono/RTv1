@@ -59,6 +59,22 @@ double	compute_lighting(t_all *a, t_vec3 point, t_vec3 normal)
 	return (intensity);
 }
 
+int		convert_to_int(t_vec3 color)
+{
+	int	norm_col;
+
+	norm_col = 0;
+	color.x = color.x < 0 ? 0 : color.x; 
+	norm_col += color.x > 255 ? 255 : color.x;
+	norm_col <<= 8;
+	color.y = color.y < 0 ? 0 : color.y; 
+	norm_col += color.y > 255 ? 255 : color.y;
+	norm_col <<= 8;
+	color.y = color.z < 0 ? 0 : color.z; 
+	norm_col += color.z > 255 ? 255 : color.z;
+	return (norm_col);
+}
+
 void	trace_ray(t_all *a, int x, int y)
 {
 	int 		i;
@@ -67,6 +83,7 @@ void	trace_ray(t_all *a, int x, int y)
 	double		intersection1;
 	double		intersection2;
 	double		closest_intersection;
+	t_vec3		color;
 	t_sphere	*closest_sphere;
 
 	min = 1.0;
@@ -96,7 +113,8 @@ void	trace_ray(t_all *a, int x, int y)
 		t_vec3 point = add(a->d.camera_pos, multiply(a->d.direction, closest_intersection));
 		t_vec3 normal = substract(point, closest_sphere->center);
 		normal = multiply(normal, 1.0 / length(normal));
-		put_pixel(a, x, y, compute_lighting(a, point, normal) * closest_sphere->color);
+		color = multiply(closest_sphere->color, compute_lighting(a, point, normal));
+		put_pixel(a, x, y, convert_to_int(color));
 	}
 }
 
@@ -131,14 +149,18 @@ void	init(t_all *a)
 	a->d.camera_pos.x = 0;
 	a->d.camera_pos.y = 0;
 	a->d.camera_pos.z = 0;
-	a->d.obj_arr_length = 3;
+	a->d.obj_arr_length = 4;
 	a->d.arr = (t_sphere *)malloc(sizeof(t_sphere) * a->d.obj_arr_length);
-	a->d.arr[0] = (t_sphere){{0.0, -1.0, 3.0}, 1.0, 0xff0000};
-	a->d.arr[1] = (t_sphere){{2.5, 0.0, 4.0}, 1.0, 0x00ff00};
-	a->d.arr[2] = (t_sphere){{-2.0, 0.0, 4.0}, 1.0, 0x0000ff};
-	a->d.light_arr_length = 1;
+	a->d.arr[0] = (t_sphere){{0, -1, 3}, {255, 0, 0}, 1};
+	a->d.arr[1] = (t_sphere){{2, 0, 4}, {0, 0, 255}, 1};
+	a->d.arr[2] = (t_sphere){{-2, 0, 4}, {0, 255, 0},1};
+	a->d.arr[3] = (t_sphere){{0, 5001, 0}, {255, 255, 0}, 5000};
+	a->d.light_arr_length = 4;
 	a->d.light = (t_light *)malloc(sizeof(t_light) * a->d.light_arr_length);
-	a->d.light[0] = (t_light){{0.0, -1.0, 3.0}, 1.0};
+	a->d.light[0] = (t_light){{0.0, -1.0, 3.0}, 1.0/*1.0*/};
+	a->d.light[1] = (t_light){{0.0, 0.0, 0.0}, 4.0/*1.0*/};
+	a->d.light[2] = (t_light){{-2.0, 0.0, 4.0}, 1.0/*1.0*/};
+	a->d.light[3] = (t_light){{0.0, 0.5, 0.0}, 7.0/*1.0*/};
 }
 
 int		main(int ac, char **av)

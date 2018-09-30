@@ -3,7 +3,7 @@
 # define WIDTH 555
 //with even numbers last right vertical column appear on other side of img
 # define HEIGHT 555
-# define BACKGROUND 0
+# define BACKGROUND 16777215
 
 # include <math.h>
 # include <stdio.h>
@@ -26,8 +26,8 @@ typedef struct	s_light
 typedef struct	s_sphere
 {
 	t_vec3		center;
+	t_vec3		color;
 	double		radius;
-	int			color;
 }				t_sphere;
 
 typedef struct	s_data
