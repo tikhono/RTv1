@@ -51,6 +51,10 @@ double	compute_lighting(t_all *a, t_vec3 point, t_vec3 normal)
 	while (i < a->d.light_arr_length)
 	{
 		vec_l = substract(a->d.light[i].center, point);
+		// Shadow check.
+		//var blocker = ClosestIntersection(point, vec_l, EPSILON, t_max);
+		//if (blocker)
+		//	continue;
 		n_dot_l = product(normal, vec_l);
 		if (n_dot_l > 0)
 			intensity += a->d.light[i].intensity * n_dot_l / (length_n * length(vec_l));
@@ -75,37 +79,45 @@ int		convert_to_int(t_vec3 color)
 	return (norm_col);
 }
 
-void	trace_ray(t_all *a, int x, int y)
+void	get_closest_intersection(t_all *a, double *closest_intersection, t_sphere **closest_sphere)
 {
 	int 		i;
 	double		min;
 	double		max;
 	double		intersection1;
 	double		intersection2;
-	double		closest_intersection;
-	t_vec3		color;
-	t_sphere	*closest_sphere;
 
 	min = 1.0;
 	max = INFINITY;
-	closest_intersection = INFINITY;
-	closest_sphere = NULL;
+	*closest_intersection = INFINITY;
+	*closest_sphere = NULL;
 	i = 0;
 	while (i < a->d.obj_arr_length)
 	{
 		get_intersections(a, &a->d.arr[i], &intersection1, &intersection2);
-		if (intersection1 < closest_intersection && min < intersection1 && intersection1 < max)
+		if (intersection1 < *closest_intersection && min < intersection1 && intersection1 < max)
 		{
-			closest_intersection = intersection1;
-			closest_sphere = &a->d.arr[i];
+			*closest_intersection = intersection1;
+			*closest_sphere = &a->d.arr[i];
 		}
-		if (intersection2 < closest_intersection && min < intersection2 && intersection2 < max)
+		if (intersection2 < *closest_intersection && min < intersection2 && intersection2 < max)
 		{
-			closest_intersection = intersection2;
-			closest_sphere = &a->d.arr[i];
+			*closest_intersection = intersection2;
+			*closest_sphere = &a->d.arr[i];
 		}
 		++i;
 	}
+	printf("%p\t", closest_sphere);
+}
+
+void	trace_ray(t_all *a, int x, int y)
+{
+	double		closest_intersection;
+	t_vec3		color;
+	t_sphere	*closest_sphere;
+
+	get_closest_intersection(a, &closest_intersection, &closest_sphere);
+	printf("%p\n", closest_sphere);
 	if (closest_sphere == NULL)
 		put_pixel(a, x, y, BACKGROUND);
 	else
@@ -151,16 +163,16 @@ void	init(t_all *a)
 	a->d.camera_pos.z = 0;
 	a->d.obj_arr_length = 4;
 	a->d.arr = (t_sphere *)malloc(sizeof(t_sphere) * a->d.obj_arr_length);
-	a->d.arr[0] = (t_sphere){{0, -1, 3}, {255, 0, 0}, 1};
+	a->d.arr[0] = (t_sphere){{0, -1, 3}, {255, 5, 5}, 1};
 	a->d.arr[1] = (t_sphere){{2, 0, 4}, {0, 0, 255}, 1};
 	a->d.arr[2] = (t_sphere){{-2, 0, 4}, {0, 255, 0},1};
 	a->d.arr[3] = (t_sphere){{0, 5001, 0}, {255, 255, 0}, 5000};
 	a->d.light_arr_length = 4;
 	a->d.light = (t_light *)malloc(sizeof(t_light) * a->d.light_arr_length);
-	a->d.light[0] = (t_light){{0.0, -1.0, 3.0}, 1.0/*1.0*/};
-	a->d.light[1] = (t_light){{0.0, 0.0, 0.0}, 4.0/*1.0*/};
-	a->d.light[2] = (t_light){{-2.0, 0.0, 4.0}, 1.0/*1.0*/};
-	a->d.light[3] = (t_light){{0.0, 0.5, 0.0}, 7.0/*1.0*/};
+	a->d.light[0] = (t_light){{0.0, -1.0, 3.0}, 1.0};
+	a->d.light[1] = (t_light){{0.0, 0.0, 0.0}, 1.0};
+	a->d.light[2] = (t_light){{-2.0, 0.0, 4.0}, 1.0};
+	a->d.light[3] = (t_light){{0, 0, 0}, 50};
 }
 
 int		main(int ac, char **av)
