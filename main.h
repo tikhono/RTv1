@@ -1,14 +1,21 @@
 #ifndef MAIN_H
 # define MAIN_H
-# define WIDTH 555
+# define WIDTH 777
 //with even numbers last right vertical column appear on other side of img
-# define HEIGHT 555
+# define HEIGHT 777
 # define BACKGROUND 16777215
 
 # include <math.h>
 # include <stdio.h>
 # include "./mlx/mlx.h"
 # include "./libft/libft.h"
+
+typedef struct	s_inter
+{
+	double		one;
+	double		two;
+}
+				t_inter;
 
 typedef struct	s_vec3
 {
@@ -37,7 +44,6 @@ typedef struct	s_data
 	double		viewport_size;
 	double		projection_plane_z;
 	t_vec3		camera_pos;
-	t_vec3		direction;
 	t_sphere	*arr;
 	t_light		*light;
 }				t_data;
