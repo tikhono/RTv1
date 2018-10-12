@@ -30,6 +30,14 @@ typedef struct	s_light
 	double		intensity;
 }				t_light;
 
+typedef struct	s_plane
+{
+	t_vec3		norm;
+	t_vec3		color;
+	double		dist;
+}
+				t_plane;
+
 typedef struct	s_sphere
 {
 	t_vec3		center;
@@ -45,6 +53,7 @@ typedef struct	s_data
 	double		projection_plane_z;
 	t_vec3		camera_pos;
 	t_sphere	*arr;
+	t_plane		*plane_arr;
 	t_light		*light;
 }				t_data;
 

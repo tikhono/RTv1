@@ -83,7 +83,6 @@ double	compute_lighting(t_all *a, t_vec3 point, t_vec3 normal)
 		get_closest_intersection(a, &intersection, &sphere, point, vec_l, 0.001, 1);
 		if (sphere != NULL)
 		{
-			printf("Shadow! Intersection: %f\n", intersection);
 			i++;
 			continue ;
 		}
@@ -129,13 +128,6 @@ void	trace_ray(t_all *a, int x, int y, t_vec3 direction)
 		normal = multiply(normal, 1.0 / length(normal));
 		intensity = compute_lighting(a, point, normal);
 		color = multiply(closest_sphere->color, intensity);
-	//	printf("%f, %f, %f\n", point.x, point.y, point.z);
-/*
-		printf("%d %d\n", x, y);
-		printf("%f\t%f\t%f\n", closest_sphere->color.x, closest_sphere->color.y, closest_sphere->color.z);
-		printf("intensity %f\n", intensity);
-		printf("%f\t%f\t%f\n", color.x, color.y, color.z);
-*/
 		put_pixel(a, x, y, convert_to_int(color));
 	}
 }
@@ -172,24 +164,17 @@ void	init(t_all *a)
 	a->d.projection_plane_z = 1.0;
 	a->d.camera_pos.x = 0;
 	a->d.camera_pos.y = 0;
-	a->d.camera_pos.z = -2;
+	a->d.camera_pos.z = 0;
 
 	a->d.obj_arr_length = 2;
 	a->d.arr = (t_sphere *)malloc(sizeof(t_sphere) * a->d.obj_arr_length);
 	a->d.arr[0] = (t_sphere){{0, 0, 3}, {255, 5, 5}, 0.3};
 	a->d.arr[1] = (t_sphere){{0, 5000.5, 3}, {255, 255, 0}, 5000};
-	a->d.light_arr_length = 1;
+	a->d.light_arr_length = 3;
 	a->d.light = (t_light *)malloc(sizeof(t_light) * a->d.light_arr_length);
 	a->d.light[0] = (t_light){{0, -10, 10}, 1};
-/*
-	a->d.obj_arr_length = 2;
-	a->d.arr = (t_sphere *)malloc(sizeof(t_sphere) * a->d.obj_arr_length);
-	a->d.arr[0] = (t_sphere){{-0.75, 0, 3}, {255, 5, 5}, 0.2};
-	a->d.arr[1] = (t_sphere){{0, 0, 3}, {255, 255, 0}, 0.2};
-	a->d.light_arr_length = 1;
-	a->d.light = (t_light *)malloc(sizeof(t_light) * a->d.light_arr_length);
-	a->d.light[0] = (t_light){{10, 0, 3}, 1};
-*/
+	a->d.light[1] = (t_light){{4, -10, 10}, 1};
+	a->d.light[2] = (t_light){{0, 0, 0}, 0.5};
 }
 
 int		main(int ac, char **av)
