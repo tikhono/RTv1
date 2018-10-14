@@ -76,6 +76,11 @@ typedef struct	s_all
 
 int				call_hookers(int key, t_all *a);
 int				exit_mouse(void);
+int				convert_to_int(t_vec3 color);
+void			init(t_all *a);
+void			render(t_all *a);
+void			put_pixel(t_all *a, int x, int y, int color);
+void			trace_ray(t_all *a, int x, int y, t_vec3 direction);
 double			product(t_vec3 a, t_vec3 b);
 double 			length(t_vec3 a);
 t_vec3			substract(t_vec3 a, t_vec3 b);
