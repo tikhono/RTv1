@@ -69,8 +69,7 @@ double	compute_lighting(t_all *a, t_vec3 point, t_plane *closest_plane)
 	while (i < a->d.light_arr_length)
 	{
 		vec_l = substract(a->d.light[i].center, point);
-		vec_l = multiply(vec_l, 1 / length(vec_l));
-		get_closest_intersection(a, &intersection, &plane, point, vec_l, 0.00001, 1);
+		get_closest_intersection(a, &intersection, &plane, point, vec_l, 0.000001, 1);
 		if (plane != NULL || (get_plane_side(closest_plane, a->d.light[i].center) != get_plane_side(closest_plane, a->d.camera_pos)))
 		{
 			++i;
@@ -151,16 +150,15 @@ void	init(t_all *a)
 	a->d.projection_plane_z = 1.0;
 	a->d.camera_pos.x = 0;
 	a->d.camera_pos.y = 0;
-	a->d.camera_pos.z = 0;
+	a->d.camera_pos.z = -1;
 
-	a->d.obj_arr_length = 1;
+	a->d.obj_arr_length = 2;
 	a->d.plane_arr = (t_plane *)malloc(sizeof(t_plane) * a->d.obj_arr_length);
-//	a->d.plane_arr[0] = (t_plane){{0, 0.5, 0.1}, {50, 50, 50}, 2};
-//	a->d.plane_arr[0] = (t_plane){{1, 0, 0}, {250, 250, 50}, 1};
-	a->d.plane_arr[0] = (t_plane){{0, 1, 0}, {250, 250, 0}, 1};
+	a->d.plane_arr[0] = (t_plane){{0, 0.5, 0}, {50, 50, 50}, 2};
+	a->d.plane_arr[1] = (t_plane){{1, 0, 0.1}, {250, 250, 0}, 0};
 	a->d.light_arr_length = 1;
 	a->d.light = (t_light *)malloc(sizeof(t_light) * a->d.light_arr_length);
-	a->d.light[0] = (t_light){{0, 0, 0}, 1};
+	a->d.light[0] = (t_light){{10, -2, 0}, 1};
 /*
 	a->d.obj_arr_length = 2;
 	a->d.arr = (t_plane *)malloc(sizeof(t_plane) * a->d.obj_arr_length);
