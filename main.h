@@ -10,12 +10,17 @@
 # include "./mlx/mlx.h"
 # include "./libft/libft.h"
 
+typedef struct	s_range
+{
+	double		min;
+	double		max;
+}				t_range;
+
 typedef struct	s_inter
 {
 	double		one;
 	double		two;
-}
-				t_inter;
+}				t_inter;
 
 typedef struct	s_vec3
 {
@@ -35,8 +40,13 @@ typedef struct	s_plane
 	t_vec3		norm;
 	t_vec3		color;
 	double		dist;
-}
-				t_plane;
+}				t_plane;
+
+typedef struct	s_clos
+{
+	double		dist;
+	t_plane		*plane;
+}				t_clos;
 
 typedef struct	s_sphere
 {
@@ -44,6 +54,12 @@ typedef struct	s_sphere
 	t_vec3		color;
 	double		radius;
 }				t_sphere;
+
+typedef struct	s_closs
+{
+	double		dist;
+	t_sphere	*sphere;
+}				t_closs;
 
 typedef struct	s_data
 {

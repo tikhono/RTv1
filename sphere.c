@@ -20,50 +20,56 @@ void	get_intersections(t_all *a, t_sphere *sphere, t_inter *inter, t_vec3 point,
 	}
 }
 
-void	get_closest_intersection(t_all *a, double *closest_intersection, t_sphere **closest_sphere, t_vec3 point, t_vec3 direction, double min, double max)
+t_closs	get_closest_inter(t_all *a, t_vec3 point, t_vec3 direction, t_range r)
 {
 	int 		i;
 	t_inter		inter;
+	t_closs		c_int;
 
-	*closest_intersection = max;
-	*closest_sphere = NULL;
+	c_int.dist = r.max;
+	c_int.sphere = NULL;
 	i = 0;
 	while (i < a->d.obj_arr_length)
 	{
 		get_intersections(a, &a->d.arr[i], &inter, point, direction);
-		if (inter.one < *closest_intersection && min < inter.one && inter.one < max)
+		if (inter.one < c_int.dist && r.min < inter.one && inter.one < r.max)
 		{
-			*closest_intersection = inter.one;
-			*closest_sphere = &a->d.arr[i];
+			c_int.dist = inter.one;
+			c_int.sphere = &a->d.arr[i];
 		}
-		if (inter.two < *closest_intersection && min < inter.two && inter.two < max)
+		if (inter.two < c_int.dist && r.min < inter.two && inter.two < r.max)
 		{
-			*closest_intersection = inter.two;
-			*closest_sphere = &a->d.arr[i];
+			c_int.dist = inter.two;
+			c_int.sphere = &a->d.arr[i];
 		}
 		++i;
 	}
+	return (c_int);
 }
 
-double	compute_lighting(t_all *a, t_vec3 point, t_vec3 normal)
+double	compute_lighting(t_all *a, t_vec3 point, t_sphere *closest_sphere)
 {
 	double		intensity;
 	double		length_n;
 	double		n_dot_l;
-	double		intersection;
-	t_sphere	*sphere;
 	t_vec3		vec_l;
+	t_range		r;
+	t_closs		c_int;
 	int			i;
 
+	t_vec3 normal = substract(point, closest_sphere->center);
+	normal = multiply(normal, 1.0 / length(normal));
 	intensity = 0;
 	length_n = length(normal);
+	r.min = 0.0001;
+	r.max = 1;
 	i = 0;
 	while (i < a->d.light_arr_length)
 	{
 		vec_l = substract(a->d.light[i].center, point);
 		vec_l = multiply(vec_l, 1 / length(vec_l));
-		get_closest_intersection(a, &intersection, &sphere, point, vec_l, 0.001, 1);
-		if (sphere != NULL)
+		c_int = get_closest_inter(a, point, vec_l, r);
+		if (c_int.sphere != NULL)
 		{
 			i++;
 			continue ;
@@ -78,21 +84,22 @@ double	compute_lighting(t_all *a, t_vec3 point, t_vec3 normal)
 
 void	trace_ray(t_all *a, int x, int y, t_vec3 direction)
 {
-	double		closest_intersection;
+	t_closs		clos_inter;
 	double		intensity;
+	t_range		range;
 	t_vec3		color;
-	t_sphere	*closest_sphere;
+	t_vec3		point;
 
-	get_closest_intersection(a, &closest_intersection, &closest_sphere, a->d.camera_pos, direction, 0, INFINITY);
-	if (closest_sphere == NULL)
+	range.min = 0;
+	range.max = INFINITY;
+	clos_inter = get_closest_inter(a, a->d.camera_pos, direction, range);
+	if (clos_inter.sphere == NULL)
 		put_pixel(a, x, y, BACKGROUND);
-	else if (closest_intersection > 0 && closest_intersection < INFINITY)
+	else if (clos_inter.dist > 0 && clos_inter.dist < INFINITY)
 	{
-		t_vec3 point = add(a->d.camera_pos, multiply(direction, closest_intersection));
-		t_vec3 normal = substract(point, closest_sphere->center);
-		normal = multiply(normal, 1.0 / length(normal));
-		intensity = compute_lighting(a, point, normal);
-		color = multiply(closest_sphere->color, intensity);
+		point = add(a->d.camera_pos, multiply(direction, clos_inter.dist));
+		intensity = compute_lighting(a, point, clos_inter.sphere);
+		color = multiply(clos_inter.sphere->color, intensity);
 		put_pixel(a, x, y, convert_to_int(color));
 	}
 }

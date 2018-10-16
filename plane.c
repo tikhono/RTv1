@@ -1,26 +1,29 @@
 #include "main.h"
 
-void	get_closest_intersection(t_all *a, double *closest_intersection, t_plane **closest_plane, t_vec3 point, t_vec3 direction, double min, double max)
+t_clos	get_closest_inter(t_all *a, t_vec3 point, t_vec3 direction, t_range r)
 {
-	int 		i;
-	double		distant;
-	t_inter		inter;
+	t_clos	c_int;
+	double	dist;
+	int		i;
 
-	*closest_intersection = max;
-	*closest_plane = NULL;
+	c_int.dist = r.max;
+	c_int.plane = NULL;
 	i = 0;
 	while (i < a->d.obj_arr_length)
 	{
-	//	(norm * plane_dist - point) ^ norm / direction ^ norm
-		a->d.plane_arr[i].norm = multiply(a->d.plane_arr[i].norm, 1 / length(a->d.plane_arr[i].norm));
-		distant = product(substract(multiply(a->d.plane_arr[i].norm, a->d.plane_arr[i].dist), point), a->d.plane_arr[i].norm)/ product(direction, a->d.plane_arr[i].norm);
-		if (distant < *closest_intersection && distant > min && distant < max)
+		a->d.plane_arr[i].norm = multiply(a->d.plane_arr[i].norm,
+			1 / length(a->d.plane_arr[i].norm));
+		dist = product(substract(multiply(a->d.plane_arr[i].norm,
+			a->d.plane_arr[i].dist), point) , a->d.plane_arr[i].norm) /
+			product(direction, a->d.plane_arr[i].norm);
+		if (dist < c_int.dist && dist > r.min && dist < r.max)
 		{
-			*closest_intersection = distant;
-			*closest_plane = &a->d.plane_arr[i];
+			c_int.dist = dist;
+			c_int.plane = &a->d.plane_arr[i];
 		}
 		++i;
 	}
+	return (c_int);
 }
 
 int		get_plane_side(t_plane *plane, t_vec3 point)
@@ -42,18 +45,20 @@ double	compute_lighting(t_all *a, t_vec3 point, t_plane *closest_plane)
 	double		intensity;
 	double		length_n;
 	double		n_dot_l;
-	double		intersection;
-	t_plane		*plane;
 	t_vec3		vec_l;
+	t_range		r;
+	t_clos		c_int;
 	int			i;
 
+	r.min = 0.0001;
+	r.max = 1;
 	intensity = 0;
 	i = 0;
 	while (i < a->d.light_arr_length)
 	{
 		vec_l = substract(a->d.light[i].center, point);
-		get_closest_intersection(a, &intersection, &plane, point, vec_l, 0.000001, 1);
-		if (plane != NULL || (get_plane_side(closest_plane, a->d.light[i].center) != get_plane_side(closest_plane, a->d.camera_pos)))
+		c_int = get_closest_inter(a, point, vec_l, r);
+		if (c_int.plane != NULL || (get_plane_side(closest_plane, a->d.light[i].center) != get_plane_side(closest_plane, a->d.camera_pos)))
 		{
 			++i;
 			continue ;
@@ -66,20 +71,22 @@ double	compute_lighting(t_all *a, t_vec3 point, t_plane *closest_plane)
 
 void	trace_ray(t_all *a, int x, int y, t_vec3 direction)
 {
-	double		closest_intersection;
+	t_clos		clos_inter;
 	double		intensity;
+	t_range		range;
 	t_vec3		color;
 	t_vec3		point;
-	t_plane		*closest_plane;
 
-	get_closest_intersection(a, &closest_intersection, &closest_plane, a->d.camera_pos, direction, 0, INFINITY);
-	if (closest_plane == NULL)
+	range.min = 0;
+	range.max = INFINITY;
+	clos_inter = get_closest_inter(a, a->d.camera_pos, direction, range);
+	if (clos_inter.plane == NULL)
 		put_pixel(a, x, y, BACKGROUND);
-	else if (closest_intersection > 0 && closest_intersection < INFINITY)
+	else if (clos_inter.dist > 0 && clos_inter.dist < INFINITY)
 	{
-		point = add(a->d.camera_pos, multiply(direction, closest_intersection));
-		intensity = compute_lighting(a, point, closest_plane);
-		color = multiply(closest_plane->color, intensity);
+		point = add(a->d.camera_pos, multiply(direction, clos_inter.dist));
+		intensity = compute_lighting(a, point, clos_inter.plane);
+		color = multiply(clos_inter.plane->color, intensity);
 		put_pixel(a, x, y, convert_to_int(color));
 	}
 }
