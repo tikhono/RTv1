@@ -1,23 +1,28 @@
 #include "main.h"
 
-void	get_intersections(t_all *a, t_sphere *sphere, t_inter *inter, t_vec3 point, t_vec3 direction)
+t_inter	get_intersections(t_all *a, t_sphere *sphere, t_vec3 point, t_vec3 dir)
 {
-	t_vec3	oc = substract(point, sphere->center);
-	double	k1 = product(direction, direction);
-	double	k2 = 2 * product(oc, direction);
-	double	k3 = product(oc, oc) - sphere->radius * sphere->radius;
-	double	discriminant = k2*k2 - 4*k1*k3;
+	t_inter	inter;
+	t_vec3	oc;
+	double	k1;
+	double	k2;
+	double	k3;
 
-	if (discriminant < 0)
+	oc = substract(point, sphere->center);
+	k1 = 2 * product(dir, dir);
+	k2 = 2 * product(oc, dir);
+	k3 = product(oc, oc) - sphere->radius * sphere->radius;
+	if (k2 * k2 - 2 * k1 * k3 < 0)
 	{
-		inter->one = INFINITY;
-		inter->two = INFINITY;
+		inter.one = INFINITY;
+		inter.two = INFINITY;
 	}
 	else
 	{
-		inter->one = (-k2 + sqrt(discriminant)) / 2*k1;
-		inter->two = (-k2 - sqrt(discriminant)) / 2*k1;
+		inter.one = (-k2 + sqrt(k2 * k2 - 2 * k1 * k3)) / k1;
+		inter.two = (-k2 - sqrt(k2 * k2 - 2 * k1 * k3)) / k1;
 	}
+	return (inter);
 }
 
 t_closs	get_closest_inter(t_all *a, t_vec3 point, t_vec3 direction, t_range r)
@@ -31,7 +36,7 @@ t_closs	get_closest_inter(t_all *a, t_vec3 point, t_vec3 direction, t_range r)
 	i = 0;
 	while (i < a->d.obj_arr_length)
 	{
-		get_intersections(a, &a->d.arr[i], &inter, point, direction);
+		inter = get_intersections(a, &a->d.arr[i], point, direction);
 		if (inter.one < c_int.dist && r.min < inter.one && inter.one < r.max)
 		{
 			c_int.dist = inter.one;
@@ -71,13 +76,13 @@ double	compute_lighting(t_all *a, t_vec3 point, t_sphere *closest_sphere)
 		c_int = get_closest_inter(a, point, vec_l, r);
 		if (c_int.sphere != NULL)
 		{
-			i++;
+			++i;
 			continue ;
 		}
 		n_dot_l = product(normal, vec_l);
 		if (n_dot_l > 0)
 			intensity += a->d.light[i].intensity * n_dot_l / (length_n * length(vec_l));
-		i++;
+		++i;
 	}
 	return (intensity);
 }
