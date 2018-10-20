@@ -1,49 +1,129 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#ifndef MAIN_H
+# define MAIN_H
+# define HEIGHT 777
+# define BACKGROUND 16777215
 
-#define STACK_ARRAY_MAX 10
+# include <math.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+//# include "./mlx/mlx.h"
+//# include "./libft/libft.h"
 
-struct		Stack
+struct			s_obj;
+
+typedef struct	s_interface
 {
-    const struct	StackInterface *const vtable;
-};
+	int			(*get_closest_inter)(struct s_obj *);
+	int			(*compute_lightning)(struct s_obj *);
+}				t_interface;
 
-struct		StackInterface
+typedef struct	s_obj
 {
-    int		(*top)(struct Stack *);
-    void	(*pop)(struct Stack *);
-    void	(*push)(struct Stack *, int);
-    int		(*empty)(struct Stack *);
-    int		(*full)(struct Stack *);
-    void	(*destroy)(struct Stack *);
-};
+	const t_interface *const vtable;
+}				t_obj;
 
-struct StackArray
+typedef struct	s_vec3
 {
-    struct	Stack base;
-    int		idx;
-    int		array[STACK_ARRAY_MAX];
-};
+	double		x;
+	double		y;
+	double		z;
+}				t_vec3;
 
-struct StackList
+typedef struct	s_light
 {
-    struct Stack		base;
-    struct StackNode	*head;
-};
+	t_vec3		center;
+	double		intensity;
+}				t_light;
 
-struct StackNode
+typedef struct	s_sphere
 {
-    struct	StackNode *next;
-    int		data;
-};
+	t_obj		base;
+	t_vec3		center;
+	t_vec3		color;
+	double		radius;
+}				t_sphere;
 
-int		stack_top (struct Stack *s);
-void	stack_pop (struct Stack *s);
-void	stack_push (struct Stack *s, int x);
-int		stack_empty (struct Stack *s);
-int		stack_full (struct Stack *s); 
-void	stack_destroy (struct Stack *s);
+typedef struct	s_plane
+{
+	t_obj		base;
+	t_vec3		norm;
+	t_vec3		color;
+	double		dist;
+}				t_plane;
 
-struct	Stack * stack_list_create (void);
-struct	Stack * stack_array_create (void);
+typedef struct	s_cylinder
+{
+	t_obj		base;
+	t_vec3		center;
+	t_vec3		norm;
+	t_vec3		color;
+	double		radius;
+}				t_cylinder;
+
+typedef struct	s_cone
+{
+	t_obj		base;
+	t_vec3		center;
+	t_vec3		norm;
+	t_vec3		color;
+	double		angle;
+}				t_cone;
+
+typedef struct	s_clos
+{
+	double		dist;
+	t_obj		*obj;
+}				t_clos;
+
+typedef struct	s_data
+{
+	int			obj_arr_length;
+	int 		light_arr_length;
+	double		viewport_size;
+	double		projection_plane_z;
+	t_vec3		camera_pos;
+	t_sphere	*arr;
+	t_plane		*plane_arr;
+	t_cylinder	*cyl_arr;
+	t_cone		*con_arr;
+	t_light		*light;
+}				t_data;
+
+typedef struct	s_mlx
+{
+	void		*mlx;
+	void		*win;
+	void		*img;
+	int			x;
+	int			y;
+	int			z;
+}				t_mlx;
+
+typedef struct	s_all
+{
+	t_mlx		p;
+	t_data		d;
+	int			*addr;
+}				t_all;
+
+int				get_closest_inter (struct s_obj *s);
+int				compute_lightning (struct s_obj *s);
+
+t_obj 			*obj_cone_create (t_vec3 cent, t_vec3 norm, t_vec3 col, double angle);
+t_obj 			*obj_cyli_create (t_vec3 cent, t_vec3 norm, t_vec3 col, double rad);
+
+int				call_hookers(int key, t_all *a);
+int				exit_mouse(void);
+int				convert_to_int(t_vec3 color);
+void			init(t_all *a);
+void			render(t_all *a);
+void			put_pixel(t_all *a, int x, int y, int color);
+void			trace_ray(t_all *a, int x, int y, t_vec3 direction);
+double			product(t_vec3 a, t_vec3 b);
+double 			length(t_vec3 a);
+t_vec3			substract(t_vec3 a, t_vec3 b);
+t_vec3			add(t_vec3 a, t_vec3 b);
+t_vec3			multiply(t_vec3 a, double k);
+
+#endif
