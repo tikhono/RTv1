@@ -35,19 +35,6 @@ typedef struct	s_light
 	double		intensity;
 }				t_light;
 
-typedef struct	s_plane
-{
-	t_vec3		norm;
-	t_vec3		color;
-	double		dist;
-}				t_plane;
-
-typedef struct	s_clos
-{
-	double		dist;
-	t_plane		*plane;
-}				t_clos;
-
 typedef struct	s_sphere
 {
 	t_vec3		center;
@@ -55,11 +42,52 @@ typedef struct	s_sphere
 	double		radius;
 }				t_sphere;
 
+typedef struct	s_plane
+{
+	t_vec3		norm;
+	t_vec3		color;
+	double		dist;
+}				t_plane;
+
+typedef struct	s_cylinder
+{
+	t_vec3		center;
+	t_vec3		norm;
+	t_vec3		color;
+	double		radius;
+}				t_cylinder;
+
+typedef struct	s_cone
+{
+	t_vec3		center;
+	t_vec3		norm;
+	t_vec3		color;
+	double		angle;
+}				t_cone;
+
+typedef struct	s_clos
+{
+	double		dist;
+	t_plane		*plane;
+}				t_clos;
+
 typedef struct	s_closs
 {
 	double		dist;
 	t_sphere	*sphere;
 }				t_closs;
+
+typedef struct	s_closss
+{
+	double		dist;
+	t_cylinder	*cylinder;
+}				t_closss;
+
+typedef struct	s_clossss
+{
+	double		dist;
+	t_cone		*cone;
+}				t_clossss;
 
 typedef struct	s_data
 {
@@ -70,6 +98,8 @@ typedef struct	s_data
 	t_vec3		camera_pos;
 	t_sphere	*arr;
 	t_plane		*plane_arr;
+	t_cylinder	*cyl_arr;
+	t_cone		*con_arr;
 	t_light		*light;
 }				t_data;
 
