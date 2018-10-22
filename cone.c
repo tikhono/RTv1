@@ -1,7 +1,8 @@
 #include "main.h"
 
-t_inter	get_intersections(t_all *a, t_cone *cone, t_vec3 point, t_vec3 dir)
+static t_inter	get_intersections_cone (t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
 {
+	t_cone *cone = (void *)s;
 	t_inter	inter;
 	t_vec3	oc;
 	double	k1;
@@ -28,47 +29,20 @@ t_inter	get_intersections(t_all *a, t_cone *cone, t_vec3 point, t_vec3 dir)
 	return (inter);
 }
 
-t_clossss	get_closest_inter(t_all *a, t_vec3 point, t_vec3 direction, t_range r)
+static t_vec3	compute_lightning_cone (t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
 {
-	int 		i;
-	t_inter		inter;
-	t_clossss	c_int;
-
-	c_int.dist = r.max;
-	c_int.cone = NULL;
-	i = 0;
-	while (i < a->d.obj_arr_length)
-	{
-		a->d.con_arr[i].norm =  multiply(a->d.con_arr[i].norm, 1.0 / length(a->d.con_arr[i].norm));
-		inter = get_intersections(a, &a->d.con_arr[i], point, direction);
-		if (inter.one < c_int.dist && r.min < inter.one && inter.one < r.max)
-		{
-			c_int.dist = inter.one;
-			c_int.cone = &a->d.con_arr[i];
-		}
-		if (inter.two < c_int.dist && r.min < inter.two && inter.two < r.max)
-		{
-			c_int.dist = inter.two;
-			c_int.cone = &a->d.con_arr[i];
-		}
-		++i;
-	}
-	return (c_int);
-}
-
-double	compute_lighting(t_all *a, t_vec3 point, t_vec3 direction, t_cone *closest_cone)
-{
+	t_cone *closest_cone = (void *)s;
 	double		intensity;
 	double		length_n;
 	double		n_dot_l;
 	t_vec3		vec_l;
 	t_range		r;
-	t_clossss	c_int;
+	t_clos		c_int;
 	int			i;
 
 	t_vec3 oc = substract(point, closest_cone->center);
 	t_vec3 normal = substract(point, closest_cone->center);
-	normal = substract(normal, multiply(closest_cone->norm, (1 + pow(tan(closest_cone->angle * M_PI / 360), 2)) * product(direction, closest_cone->norm) * product(oc, closest_cone->norm)));
+	normal = substract(normal, multiply(closest_cone->norm, (1 + pow(tan(closest_cone->angle * M_PI / 360), 2)) * product(dir, closest_cone->norm) * product(oc, closest_cone->norm)));
 	normal = multiply(normal, 1.0 / length(normal));
 	intensity = 0;
 	length_n = length(normal);
@@ -80,7 +54,7 @@ double	compute_lighting(t_all *a, t_vec3 point, t_vec3 direction, t_cone *closes
 		vec_l = substract(a->d.light[i].center, point);
 		vec_l = multiply(vec_l, 1 / length(vec_l));
 		c_int = get_closest_inter(a, point, vec_l, r);
-		if (c_int.cone != NULL)
+		if (c_int.obj != NULL)
 		{
 			++i;
 			continue ;
@@ -90,47 +64,21 @@ double	compute_lighting(t_all *a, t_vec3 point, t_vec3 direction, t_cone *closes
 			intensity += a->d.light[i].intensity * n_dot_l / (length_n * length(vec_l));
 		++i;
 	}
-	return (intensity);
+	return (multiply(closest_cone->color, intensity));
 }
 
-void	trace_ray(t_all *a, int x, int y, t_vec3 direction)
+t_obj	*obj_cone_create(t_vec3 cent, t_vec3 norm, t_vec3 col, double angle)
 {
-	t_clossss	clos_inter;
-	double		intensity;
-	t_range		range;
-	t_vec3		color;
-	t_vec3		point;
-
-	range.min = 0;
-	range.max = INFINITY;
-	clos_inter = get_closest_inter(a, a->d.camera_pos, direction, range);
-	if (clos_inter.cone == NULL)
-		put_pixel(a, x, y, BACKGROUND);
-	else if (clos_inter.dist > 0 && clos_inter.dist < INFINITY)
-	{
-		point = add(a->d.camera_pos, multiply(direction, clos_inter.dist));
-		intensity = compute_lighting(a, point, direction, clos_inter.cone);
-		color = multiply(clos_inter.cone->color, intensity);
-		put_pixel(a, x, y, convert_to_int(color));
-	}
-}
-
-void	init(t_all *a)
-{
-	a->p.mlx = mlx_init();
-	a->p.img = mlx_new_image(a->p.mlx, WIDTH, HEIGHT);
-	a->p.win = mlx_new_window(a->p.mlx, WIDTH, HEIGHT, "start");
-	a->addr = (int *)mlx_get_data_addr(a->p.img, &a->p.x, &a->p.y, &a->p.z);
-	a->d.viewport_size = 1.0;
-	a->d.projection_plane_z = 1.0;
-	a->d.camera_pos.x = 0;
-	a->d.camera_pos.y = 0;
-	a->d.camera_pos.z = 0;
-
-	a->d.obj_arr_length = 1;
-	a->d.con_arr = (t_cone *)malloc(sizeof(t_cone) * a->d.obj_arr_length);
-	a->d.con_arr[0] = (t_cone){{0, 0, 10}, {1, 1, 0}, {255, 0, 0}, 20};
-	a->d.light_arr_length = 1;
-	a->d.light = (t_light *)malloc(sizeof(t_light) * a->d.light_arr_length);
-	a->d.light[0] = (t_light){{0, 0, 0}, 1};
+	static t_interface vtable = {
+		get_intersections_cone,
+		compute_lightning_cone
+	};
+	static t_obj base = { &vtable };
+	t_cone *obj_cone = malloc(sizeof(*obj_cone));
+	memcpy(&obj_cone->base, &base, sizeof(base));
+	obj_cone->center = cent;
+	obj_cone->norm = norm;
+	obj_cone->color = col;
+	obj_cone->angle = angle;
+	return (&obj_cone->base);
 }

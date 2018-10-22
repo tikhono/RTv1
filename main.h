@@ -1,20 +1,19 @@
 #ifndef MAIN_H
 # define MAIN_H
-# define WIDTH 777
-//with even numbers last right vertical column appear on other side of img
 # define HEIGHT 777
+# define WIDTH 777
 # define BACKGROUND 16777215
 
 # include <math.h>
 # include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
 # include "./mlx/mlx.h"
-# include "./libft/libft.h"
+//# include "./libft/libft.h"
 
-typedef struct	s_range
-{
-	double		min;
-	double		max;
-}				t_range;
+struct			s_obj;
+struct			s_all;
+struct			s_vec3;
 
 typedef struct	s_inter
 {
@@ -29,6 +28,23 @@ typedef struct	s_vec3
 	double		z;
 }				t_vec3;
 
+typedef struct	s_interface
+{
+	t_inter		(*get_intersections)(struct s_all *a, struct s_obj *s, struct s_vec3 point, struct s_vec3 dir);
+	t_vec3		(*compute_lightning)(struct s_all *a, struct s_obj *s, struct s_vec3 point, struct s_vec3 dir);
+}				t_interface;
+
+typedef struct	s_obj
+{
+	t_interface *const vtable;
+}				t_obj;
+
+typedef struct	s_range
+{
+	double		min;
+	double		max;
+}				t_range;
+
 typedef struct	s_light
 {
 	t_vec3		center;
@@ -37,6 +53,7 @@ typedef struct	s_light
 
 typedef struct	s_sphere
 {
+	t_obj		base;
 	t_vec3		center;
 	t_vec3		color;
 	double		radius;
@@ -44,6 +61,7 @@ typedef struct	s_sphere
 
 typedef struct	s_plane
 {
+	t_obj		base;
 	t_vec3		norm;
 	t_vec3		color;
 	double		dist;
@@ -51,6 +69,7 @@ typedef struct	s_plane
 
 typedef struct	s_cylinder
 {
+	t_obj		base;
 	t_vec3		center;
 	t_vec3		norm;
 	t_vec3		color;
@@ -59,6 +78,7 @@ typedef struct	s_cylinder
 
 typedef struct	s_cone
 {
+	t_obj		base;
 	t_vec3		center;
 	t_vec3		norm;
 	t_vec3		color;
@@ -68,26 +88,8 @@ typedef struct	s_cone
 typedef struct	s_clos
 {
 	double		dist;
-	t_plane		*plane;
+	t_obj		*obj;
 }				t_clos;
-
-typedef struct	s_closs
-{
-	double		dist;
-	t_sphere	*sphere;
-}				t_closs;
-
-typedef struct	s_closss
-{
-	double		dist;
-	t_cylinder	*cylinder;
-}				t_closss;
-
-typedef struct	s_clossss
-{
-	double		dist;
-	t_cone		*cone;
-}				t_clossss;
 
 typedef struct	s_data
 {
@@ -96,10 +98,7 @@ typedef struct	s_data
 	double		viewport_size;
 	double		projection_plane_z;
 	t_vec3		camera_pos;
-	t_sphere	*arr;
-	t_plane		*plane_arr;
-	t_cylinder	*cyl_arr;
-	t_cone		*con_arr;
+	t_obj		**obj_arr;
 	t_light		*light;
 }				t_data;
 
@@ -120,6 +119,14 @@ typedef struct	s_all
 	int			*addr;
 }				t_all;
 
+t_inter			get_intersections (t_all *a, t_obj *s, t_vec3 point, t_vec3 dir);
+t_vec3			compute_lightning (t_all *a, t_obj *s, t_vec3 point, t_vec3 dir);
+
+t_obj 			*obj_cone_create (t_vec3 cent, t_vec3 norm, t_vec3 col, double angle);
+t_obj 			*obj_cyli_create (t_vec3 cent, t_vec3 norm, t_vec3 col, double rad);
+t_obj 			*obj_plane_create (t_vec3 norm, t_vec3 col, double dist);
+t_obj 			*obj_sphere_create (t_vec3 cent, t_vec3 col, double rad);
+
 int				call_hookers(int key, t_all *a);
 int				exit_mouse(void);
 int				convert_to_int(t_vec3 color);
@@ -127,6 +134,7 @@ void			init(t_all *a);
 void			render(t_all *a);
 void			put_pixel(t_all *a, int x, int y, int color);
 void			trace_ray(t_all *a, int x, int y, t_vec3 direction);
+t_clos			get_closest_inter(t_all *a, t_vec3 point, t_vec3 direction, t_range r);
 double			product(t_vec3 a, t_vec3 b);
 double 			length(t_vec3 a);
 t_vec3			substract(t_vec3 a, t_vec3 b);

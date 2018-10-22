@@ -1,29 +1,14 @@
 #include "main.h"
 
-t_clos	get_closest_inter(t_all *a, t_vec3 point, t_vec3 direction, t_range r)
+static t_inter	get_intersections_plane (t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
 {
-	t_clos	c_int;
-	double	dist;
-	int		i;
+	t_plane *plane = (void *)s;
+	t_inter	inter;
 
-	c_int.dist = r.max;
-	c_int.plane = NULL;
-	i = 0;
-	while (i < a->d.obj_arr_length)
-	{
-		a->d.plane_arr[i].norm = multiply(a->d.plane_arr[i].norm,
-			1 / length(a->d.plane_arr[i].norm));
-		dist = product(substract(multiply(a->d.plane_arr[i].norm,
-			a->d.plane_arr[i].dist), point) , a->d.plane_arr[i].norm) /
-			product(direction, a->d.plane_arr[i].norm);
-		if (dist < c_int.dist && dist > r.min && dist < r.max)
-		{
-			c_int.dist = dist;
-			c_int.plane = &a->d.plane_arr[i];
-		}
-		++i;
-	}
-	return (c_int);
+	inter.one = product(substract(multiply(plane->norm, plane->dist), point) , plane->norm) /
+			product(dir, plane->norm);
+	inter.two = inter.one;	
+	return (inter);
 }
 
 int		get_plane_side(t_plane *plane, t_vec3 point)
@@ -40,8 +25,9 @@ int		get_plane_side(t_plane *plane, t_vec3 point)
 	return (res > 0 ? 1 : -1);
 }
 
-double	compute_lighting(t_all *a, t_vec3 point, t_plane *closest_plane)
+static t_vec3	compute_lightning_plane (t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
 {
+	t_plane *closest_plane = (void *)s;
 	double		intensity;
 	double		length_n;
 	double		n_dot_l;
@@ -58,7 +44,7 @@ double	compute_lighting(t_all *a, t_vec3 point, t_plane *closest_plane)
 	{
 		vec_l = substract(a->d.light[i].center, point);
 		c_int = get_closest_inter(a, point, vec_l, r);
-		if (c_int.plane != NULL || (get_plane_side(closest_plane, a->d.light[i].center) != get_plane_side(closest_plane, a->d.camera_pos)))
+		if (c_int.obj != NULL || (get_plane_side(closest_plane, a->d.light[i].center) != get_plane_side(closest_plane, a->d.camera_pos)))
 		{
 			++i;
 			continue ;
@@ -66,57 +52,20 @@ double	compute_lighting(t_all *a, t_vec3 point, t_plane *closest_plane)
 		intensity += a->d.light[i].intensity;
 		++i;
 	}
-	return (intensity);
+	return (multiply(closest_plane->color, intensity));
 }
 
-void	trace_ray(t_all *a, int x, int y, t_vec3 direction)
+t_obj	*obj_plane_create(t_vec3 norm, t_vec3 col, double dist)
 {
-	t_clos		clos_inter;
-	double		intensity;
-	t_range		range;
-	t_vec3		color;
-	t_vec3		point;
-
-	range.min = 0;
-	range.max = INFINITY;
-	clos_inter = get_closest_inter(a, a->d.camera_pos, direction, range);
-	if (clos_inter.plane == NULL)
-		put_pixel(a, x, y, BACKGROUND);
-	else if (clos_inter.dist > 0 && clos_inter.dist < INFINITY)
-	{
-		point = add(a->d.camera_pos, multiply(direction, clos_inter.dist));
-		intensity = compute_lighting(a, point, clos_inter.plane);
-		color = multiply(clos_inter.plane->color, intensity);
-		put_pixel(a, x, y, convert_to_int(color));
-	}
-}
-
-void	init(t_all *a)
-{
-	a->p.mlx = mlx_init();
-	a->p.img = mlx_new_image(a->p.mlx, WIDTH, HEIGHT);
-	a->p.win = mlx_new_window(a->p.mlx, WIDTH, HEIGHT, "start");
-	a->addr = (int *)mlx_get_data_addr(a->p.img, &a->p.x, &a->p.y, &a->p.z);
-	a->d.viewport_size = 1.0;
-	a->d.projection_plane_z = 1.0;
-	a->d.camera_pos.x = 0;
-	a->d.camera_pos.y = 0;
-	a->d.camera_pos.z = -1;
-
-	a->d.obj_arr_length = 2;
-	a->d.plane_arr = (t_plane *)malloc(sizeof(t_plane) * a->d.obj_arr_length);
-	a->d.plane_arr[0] = (t_plane){{0, 0.5, 0}, {50, 50, 50}, 2};
-	a->d.plane_arr[1] = (t_plane){{1, 0, 0.1}, {250, 250, 0}, 0};
-	a->d.light_arr_length = 1;
-	a->d.light = (t_light *)malloc(sizeof(t_light) * a->d.light_arr_length);
-	a->d.light[0] = (t_light){{-10, -2, 0}, 1};
-/*
-	a->d.obj_arr_length = 2;
-	a->d.arr = (t_plane *)malloc(sizeof(t_plane) * a->d.obj_arr_length);
-	a->d.arr[0] = (t_plane){{-0.75, 0, 3}, {255, 5, 5}, 0.2};
-	a->d.arr[1] = (t_plane){{0, 0, 3}, {255, 255, 0}, 0.2};
-	a->d.light_arr_length = 1;
-	a->d.light = (t_light *)malloc(sizeof(t_light) * a->d.light_arr_length);
-	a->d.light[0] = (t_light){{10, 0, 3}, 1};
-*/
+	static t_interface vtable = {
+		get_intersections_plane,
+		compute_lightning_plane
+	};
+	static t_obj base = { &vtable };
+	t_plane *obj_plane = malloc(sizeof(*obj_plane));
+	memcpy(&obj_plane->base, &base, sizeof(base));
+	obj_plane->norm = norm;
+	obj_plane->color = col;
+	obj_plane->dist = dist;
+	return (&obj_plane->base);
 }
