@@ -4,15 +4,15 @@ void	set_params(t_vec3 *a, t_vec3 *b, t_vec3 *c, double *d)
 {
 	a->x = 0;
 	a->y = 0;
-	a->z = 15;
+	a->z = 1;
 	b->x = 0;
-	b->y = 1;
-	b->z = 0.1;
-	*b =  multiply(*b, 1.0 / length(*b));
+	b->y = -1;
+	b->z = 0;
+	*b =  normalize(*b);
 	c->x = 255;
 	c->y = 0;
 	c->z = 0;
-	*d = 1;
+	*d = -2;
 }
 
 void	init(t_all *a)
@@ -33,11 +33,13 @@ void	init(t_all *a)
 	a->d.camera_pos.y = 0;
 	a->d.camera_pos.z = 0;
 
-	a->d.obj_arr_length = 1;
+	a->d.obj_arr_length = 2;
 	a->d.obj_arr = (t_obj **)malloc(sizeof(t_obj *) * a->d.obj_arr_length);
 	a->d.obj_arr[0] = obj_plane_create(b1, c1, d1);
-	//a->d.obj_arr[1] = obj_cone_create(a1, b1, c1, d1);
+	b1.x = 1;
+	b1.y = 0;
+	a->d.obj_arr[1] = obj_plane_create(b1, c1, d1);
 	a->d.light_arr_length = 1;
 	a->d.light = (t_light *)malloc(sizeof(t_light) * a->d.light_arr_length);
-	a->d.light[0] = (t_light){{0, 0, 0}, 1};
+	a->d.light[0] = (t_light){{-3, 0, 0}, 1};
 }

@@ -2,7 +2,7 @@
 
 static t_inter	get_intersections_cone (t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
 {
-	t_cone *cone = (void *)s;
+	t_cone	*cone = (void *)s;
 	t_inter	inter;
 	t_vec3	oc;
 	double	k1;
@@ -29,49 +29,31 @@ static t_inter	get_intersections_cone (t_all *a, t_obj *s, t_vec3 point, t_vec3 
 	return (inter);
 }
 
-static t_vec3	compute_lightning_cone (t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
+static t_vec3	get_normal_cone(t_obj *s, t_vec3 point, t_vec3 dir)
 {
-	t_cone *closest_cone = (void *)s;
-	double		intensity;
-	double		length_n;
-	double		n_dot_l;
-	t_vec3		vec_l;
-	t_range		r;
-	t_clos		c_int;
-	int			i;
+	t_cone	*cone = (void *)s;
+	t_vec3	normal;
+	t_vec3	oc;
 
-	t_vec3 oc = substract(point, closest_cone->center);
-	t_vec3 normal = substract(point, closest_cone->center);
-	normal = substract(normal, multiply(closest_cone->norm, (1 + pow(tan(closest_cone->angle * M_PI / 360), 2)) * product(dir, closest_cone->norm) * product(oc, closest_cone->norm)));
-	normal = multiply(normal, 1.0 / length(normal));
-	intensity = 0;
-	length_n = length(normal);
-	r.min = 0.0001;
-	r.max = 1;
-	i = 0;
-	while (i < a->d.light_arr_length)
-	{
-		vec_l = substract(a->d.light[i].center, point);
-		vec_l = multiply(vec_l, 1 / length(vec_l));
-		c_int = get_closest_inter(a, point, vec_l, r);
-		if (c_int.obj != NULL)
-		{
-			++i;
-			continue ;
-		}
-		n_dot_l = product(normal, vec_l);
-		if (n_dot_l > 0)
-			intensity += a->d.light[i].intensity * n_dot_l / (length_n * length(vec_l));
-		++i;
-	}
-	return (multiply(closest_cone->color, intensity));
+	oc = substract(point, cone->center);
+	normal = substract(point, cone->center);
+	normal = substract(normal, multiply(cone->norm, (1 + pow(tan(cone->angle * M_PI / 360), 2)) * product(dir, cone->norm) * product(oc, cone->norm)));
+	normal = normalize(normal);
+	return (normal);
+}
+
+static t_vec3	get_color_cone(t_obj *s)
+{
+	t_cone	*cone = (void *)s;
+	return (cone->color);
 }
 
 t_obj	*obj_cone_create(t_vec3 cent, t_vec3 norm, t_vec3 col, double angle)
 {
 	static t_interface vtable = {
 		get_intersections_cone,
-		compute_lightning_cone
+		get_normal_cone,
+		get_color_cone
 	};
 	static t_obj base = { &vtable };
 	t_cone *obj_cone = malloc(sizeof(*obj_cone));

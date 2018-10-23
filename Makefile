@@ -22,8 +22,6 @@ FLAGS = -Wfatal-errors
 
 MLX = -lmlx -framework AppKit -framework OpenGL  
 
-OPENCL = -framework OpenCL
-
 SRC =	main.c\
 		host.c\
 		hookers.c

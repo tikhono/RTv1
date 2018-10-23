@@ -11,9 +11,8 @@
 # include "./mlx/mlx.h"
 //# include "./libft/libft.h"
 
-struct			s_obj;
 struct			s_all;
-struct			s_vec3;
+struct			s_interface;
 
 typedef struct	s_inter
 {
@@ -28,16 +27,17 @@ typedef struct	s_vec3
 	double		z;
 }				t_vec3;
 
-typedef struct	s_interface
-{
-	t_inter		(*get_intersections)(struct s_all *a, struct s_obj *s, struct s_vec3 point, struct s_vec3 dir);
-	t_vec3		(*compute_lightning)(struct s_all *a, struct s_obj *s, struct s_vec3 point, struct s_vec3 dir);
-}				t_interface;
-
 typedef struct	s_obj
 {
-	t_interface *const vtable;
+	struct s_interface	*const vtable;
 }				t_obj;
+
+typedef struct	s_interface
+{
+	t_inter		(*get_intersections)(struct s_all *a, t_obj *s, t_vec3 point, t_vec3 dir);
+	t_vec3		(*get_normal)(t_obj *s, t_vec3 point, t_vec3 dir);
+	t_vec3		(*get_color)(t_obj *s);
+}				t_interface;
 
 typedef struct	s_range
 {
@@ -119,8 +119,9 @@ typedef struct	s_all
 	int			*addr;
 }				t_all;
 
-t_inter			get_intersections (t_all *a, t_obj *s, t_vec3 point, t_vec3 dir);
-t_vec3			compute_lightning (t_all *a, t_obj *s, t_vec3 point, t_vec3 dir);
+t_inter			get_intersections(t_all *a, t_obj *s, t_vec3 point, t_vec3 dir);
+t_vec3			get_normal(t_obj *s, t_vec3 point, t_vec3 dir);
+t_vec3			get_color(t_obj *s);
 
 t_obj 			*obj_cone_create (t_vec3 cent, t_vec3 norm, t_vec3 col, double angle);
 t_obj 			*obj_cyli_create (t_vec3 cent, t_vec3 norm, t_vec3 col, double rad);
@@ -137,6 +138,7 @@ void			trace_ray(t_all *a, int x, int y, t_vec3 direction);
 t_clos			get_closest_inter(t_all *a, t_vec3 point, t_vec3 direction, t_range r);
 double			product(t_vec3 a, t_vec3 b);
 double 			length(t_vec3 a);
+t_vec3			normalize(t_vec3 a);
 t_vec3			substract(t_vec3 a, t_vec3 b);
 t_vec3			add(t_vec3 a, t_vec3 b);
 t_vec3			multiply(t_vec3 a, double k);

@@ -5,8 +5,8 @@ static t_inter	get_intersections_plane (t_all *a, t_obj *s, t_vec3 point, t_vec3
 	t_plane *plane = (void *)s;
 	t_inter	inter;
 
-	inter.one = product(substract(multiply(plane->norm, plane->dist), point) , plane->norm) /
-			product(dir, plane->norm);
+	inter.one = product(substract(multiply(plane->norm,
+		plane->dist), point) , plane->norm) / product(dir, plane->norm);
 	inter.two = inter.one;	
 	return (inter);
 }
@@ -24,7 +24,7 @@ int		get_plane_side(t_plane *plane, t_vec3 point)
 		return (0);
 	return (res > 0 ? 1 : -1);
 }
-
+/*
 static t_vec3	compute_lightning_plane (t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
 {
 	t_plane *closest_plane = (void *)s;
@@ -49,17 +49,33 @@ static t_vec3	compute_lightning_plane (t_all *a, t_obj *s, t_vec3 point, t_vec3 
 			++i;
 			continue ;
 		}
-		intensity += a->d.light[i].intensity;
+		n_dot_l = product(closest_plane->norm, vec_l);
+		if (n_dot_l > 0)
+			intensity += a->d.light[i].intensity * n_dot_l /  length(vec_l);
 		++i;
 	}
 	return (multiply(closest_plane->color, intensity));
+}
+*/
+
+static t_vec3	get_normal_plane(t_obj *s, t_vec3 point, t_vec3 dir)
+{
+	t_plane	*plane = (void *)s;
+	
+	return (plane->norm);
+}
+static t_vec3	get_color_plane(t_obj *s)
+{
+	t_plane	*plane = (void *)s;
+	return (plane->color);
 }
 
 t_obj	*obj_plane_create(t_vec3 norm, t_vec3 col, double dist)
 {
 	static t_interface vtable = {
 		get_intersections_plane,
-		compute_lightning_plane
+		get_normal_plane,
+		get_color_plane
 	};
 	static t_obj base = { &vtable };
 	t_plane *obj_plane = malloc(sizeof(*obj_plane));
