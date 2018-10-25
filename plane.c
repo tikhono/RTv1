@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   plane.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/10/25 14:48:57 by atikhono          #+#    #+#             */
+/*   Updated: 2018/10/25 14:50:11 by atikhono         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "main.h"
 
 static t_inter	get_intersections_plane (t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
@@ -7,7 +19,7 @@ static t_inter	get_intersections_plane (t_all *a, t_obj *s, t_vec3 point, t_vec3
 
 	inter.one = product(substract(multiply(plane->norm,
 		plane->dist), point) , plane->norm) / product(dir, plane->norm);
-	inter.two = inter.one;	
+	inter.two = inter.one;
 	return (inter);
 }
 

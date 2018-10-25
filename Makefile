@@ -6,11 +6,11 @@
 #    By: atikhono <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/04/01 17:15:51 by atikhono          #+#    #+#              #
-#    Updated: 2018/08/10 13:22:53 by atikhono         ###   ########.fr        #
+#    Updated: 2018/10/25 14:58:08 by atikhono         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = fractol
+NAME = RTv1
 
 LIBNAME = ./libft/libft.a
 
@@ -23,15 +23,25 @@ FLAGS = -Wfatal-errors
 MLX = -lmlx -framework AppKit -framework OpenGL  
 
 SRC =	main.c\
-		host.c\
-		hookers.c
+		hookers.c\
+		cone.c\
+		cylinder.c\
+		sphere.c\
+		plane.c\
+		vec_comp.c\
+		interface.c\
+		parser.c\
+		get_data.c\
+		other.c\
+		init.c
+		
 
 all: liball $(NAME)
 
 obj: $(OBJ)
 
 $(NAME) : $(LIBNAME) $(OBJ)
-		gcc -O3 $(FLAGS) $^ -o $(NAME) $(MLX) $(OPENCL)
+		gcc $(FLAGS) $^ -o $(NAME) $(MLX) $(OPENCL)
 
 %.o: %.c
 		gcc $(FLAGS) -o $@ -c $<

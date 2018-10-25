@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_data.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/10/25 14:39:14 by atikhono          #+#    #+#             */
+/*   Updated: 2018/10/25 14:39:15 by atikhono         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "main.h"
 
 void	get_cones(t_all *all, int fd)
@@ -8,7 +20,7 @@ void	get_cones(t_all *all, int fd)
 	t_vec3	c;
 	double	d;
 
-	count = get_int(fd); 
+	count = get_int(fd);
 	while (count > 0)
 	{
 		a = get_vector(fd);
@@ -27,7 +39,7 @@ void	get_planes(t_all *all, int fd)
 	t_vec3	b;
 	double	c;
 
-	count = get_int(fd); 
+	count = get_int(fd);
 	while (count > 0)
 	{
 		a = get_vector(fd);
@@ -45,7 +57,7 @@ void	get_spheres(t_all *all, int fd)
 	t_vec3	b;
 	double	c;
 
-	count = get_int(fd); 
+	count = get_int(fd);
 	while (count > 0)
 	{
 		a = get_vector(fd);
@@ -64,7 +76,7 @@ void	get_cylinders(t_all *all, int fd)
 	t_vec3	c;
 	double	d;
 
-	count = get_int(fd); 
+	count = get_int(fd);
 	while (count > 0)
 	{
 		get_vector(fd);

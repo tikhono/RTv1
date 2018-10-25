@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/10/25 14:29:48 by atikhono          #+#    #+#             */
+/*   Updated: 2018/10/25 14:29:50 by atikhono         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "main.h"
 
 void	set_direction(t_all *a, int x, int y, t_vec3 *direction)
@@ -22,13 +34,13 @@ int		convert_to_int(t_vec3 color)
 	int	norm_col;
 
 	norm_col = 0;
-	color.x = color.x < 0 ? 0 : color.x; 
+	color.x = color.x < 0 ? 0 : color.x;
 	norm_col += color.x > 255 ? 255 : color.x;
 	norm_col <<= 8;
-	color.y = color.y < 0 ? 0 : color.y; 
+	color.y = color.y < 0 ? 0 : color.y;
 	norm_col += color.y > 255 ? 255 : color.y;
 	norm_col <<= 8;
-	color.y = color.z < 0 ? 0 : color.z; 
+	color.y = color.z < 0 ? 0 : color.z;
 	norm_col += color.z > 255 ? 255 : color.z;
 	return (norm_col);
 }

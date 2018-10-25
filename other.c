@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   other.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/10/25 14:31:01 by atikhono          #+#    #+#             */
+/*   Updated: 2018/10/25 14:31:24 by atikhono         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "main.h"
 
 t_vec3	normalize(t_vec3 a)
@@ -5,7 +17,7 @@ t_vec3	normalize(t_vec3 a)
 	return (multiply(a, 1 / length(a)));
 }
 
-double	compute_intensity(t_obj *s, t_vec3 normal, t_vec3 vec_l, double	l_int)
+double	compute_intensity(t_obj *s, t_vec3 normal, t_vec3 vec_l, double l_int)
 {
 	double	intensity;
 	double	n_dot_l;
@@ -37,7 +49,8 @@ t_vec3	compute_color(t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
 			++i;
 			continue ;
 		}
-		intensity += compute_intensity(c_int.obj, get_normal(s, point, dir), vec_l, a->d.light[i].intensity);
+		intensity += compute_intensity(c_int.obj,
+				get_normal(s, point, dir), vec_l, a->d.light[i].intensity);
 		++i;
 	}
 	return (multiply(get_color(s), intensity));
