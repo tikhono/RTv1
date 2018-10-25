@@ -1,1 +1,1 @@
-gcc main.c cone.c cylinder.c sphere.c plane.c interface.c other.c hookers.c init.c vec_comp.c -lmlx -lXext -lX11 -L/usr/include -I/usr/include -lm && ./a.out
+gcc main.c cone.c cylinder.c sphere.c plane.c interface.c other.c hookers.c init.c parser.c get_data.c  vec_comp.c ./libft/libft.a -lmlx -lXext -lX11 -L/usr/include -I/usr/include -lm -Wfatal-errors && ./a.out scene1.txt
