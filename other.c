@@ -14,15 +14,6 @@ double	compute_intensity(t_obj *s, t_vec3 normal, t_vec3 vec_l, double	l_int)
 	n_dot_l = product(normal, vec_l);
 	if (n_dot_l > 0)
 		intensity += l_int * n_dot_l / length(vec_l);
-	// Specular reflection.
-	/*
-	if (specular != -1) {
-	var vec_r = Subtract(Multiply(2.0*DotProduct(normal, vec_l), normal), vec_l);
-	var r_dot_v = DotProduct(vec_r, view);
-	if (r_dot_v > 0) {
-		intensity += light.intensity * Math.pow(r_dot_v / (Length(vec_r) * length_v), specular); 
-	}
-*/
 	return (intensity);
 }
 
@@ -54,27 +45,27 @@ t_vec3	compute_color(t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
 
 t_clos	get_closest_inter(t_all *a, t_vec3 point, t_vec3 direction, t_range r)
 {
-	int 		i;
 	t_inter		inter;
 	t_clos		c_int;
+	t_node		*cur;
 
+	cur = a->d.obj_list;
 	c_int.dist = r.max;
 	c_int.obj = NULL;
-	i = 0;
-	while (i < a->d.obj_arr_length)
+	while (cur)
 	{
-		inter = get_intersections(a, a->d.obj_arr[i], point, direction);
+		inter = get_intersections(a, cur->obj, point, direction);
 		if (inter.one < c_int.dist && r.min < inter.one && inter.one < r.max)
 		{
 			c_int.dist = inter.one;
-			c_int.obj = a->d.obj_arr[i];
+			c_int.obj = cur->obj;
 		}
 		if (inter.two < c_int.dist && r.min < inter.two && inter.two < r.max)
 		{
 			c_int.dist = inter.two;
-			c_int.obj = a->d.obj_arr[i];
+			c_int.obj = cur->obj;
 		}
-		++i;
+		cur = cur->next;
 	}
 	return (c_int);
 }

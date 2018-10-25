@@ -46,7 +46,7 @@ void	render(t_all *a)
 		while (y <= HEIGHT / 2)
 		{
 			set_direction(a, x, y, &direction);
-			direction = multiply(direction, 1 / length(direction));
+			direction = normalize(direction);
 			trace_ray(a, x, y, direction);
 			++y;
 		}
@@ -59,7 +59,7 @@ int		main(int ac, char **av)
 {
 	t_all	a;
 
-	init(&a);
+	init(&a, av[1]);
 	render(&a);
 	mlx_hook(a.p.win, 2, 5, call_hookers, &a);
 	mlx_hook(a.p.win, 17, 1L << 17, exit_mouse, 0);

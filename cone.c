@@ -1,6 +1,6 @@
 #include "main.h"
 
-static t_inter	get_intersections_cone (t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
+static t_inter	get_intersections_cone(t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
 {
 	t_cone	*cone = (void *)s;
 	t_inter	inter;
