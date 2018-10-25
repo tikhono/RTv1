@@ -38,6 +38,7 @@ double	get_double(int fd)
 		exit(-1);
 	}
 	res = (double)ft_atoi(line);
+	free(line);
 	return (res);
 }
 
