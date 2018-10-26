@@ -6,7 +6,7 @@
 /*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/25 14:32:36 by atikhono          #+#    #+#             */
-/*   Updated: 2018/10/26 23:54:31 by atikhono         ###   ########.fr       */
+/*   Updated: 2018/10/27 02:01:48 by atikhono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,18 @@ static t_inter	get_inter_s(t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
 
 	sphere = (void *)s;
 	point = substract(point, sphere->center);
-	k1 = 2 * product(dir, dir);
-	k2 = 2 * product(point, dir);
+	k1 = product(dir, dir);
+	k2 = product(point, dir);
 	k3 = product(point, point) - sphere->radius * sphere->radius;
-	if (k2 * k2 - 2 * k1 * k3 < 0)
+	if (k2 * k2 - k1 * k3 < 0)
 	{
 		inter.one = INFINITY;
 		inter.two = INFINITY;
 	}
 	else
 	{
-		inter.one = (-k2 + sqrt(k2 * k2 - 2 * k1 * k3)) / k1;
-		inter.two = (-k2 - sqrt(k2 * k2 - 2 * k1 * k3)) / k1;
+		inter.one = (-k2 + sqrt(k2 * k2 - k1 * k3)) / k1;
+		inter.two = (-k2 - sqrt(k2 * k2 - k1 * k3)) / k1;
 	}
 	return (inter);
 }
