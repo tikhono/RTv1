@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.h                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/10/26 15:57:45 by atikhono          #+#    #+#             */
+/*   Updated: 2018/10/26 15:59:56 by atikhono         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MAIN_H
 # define MAIN_H
 # define HEIGHT 777
@@ -11,8 +23,8 @@
 # include <mlx.h>
 # include "./libft/libft.h"
 
-struct				s_all;
-struct				s_interface;
+struct s_all;
+struct s_interface;
 
 typedef struct		s_inter
 {
@@ -34,7 +46,8 @@ typedef struct		s_obj
 
 typedef struct		s_interface
 {
-	t_inter			(*get_intersections)(struct s_all *a, t_obj *s, t_vec3 point, t_vec3 dir);
+	t_inter			(*get_intersections)
+		(struct s_all *a, t_obj *s, t_vec3 point, t_vec3 dir);
 	t_vec3			(*get_normal)(t_obj *s, t_vec3 point, t_vec3 dir);
 	t_vec3			(*get_color)(t_obj *s);
 }					t_interface;
@@ -126,14 +139,17 @@ typedef struct		s_all
 	int				*addr;
 }					t_all;
 
-t_inter				get_intersections(t_all *a, t_obj *s, t_vec3 point, t_vec3 dir);
+t_inter				get_intersections
+(t_all *a, t_obj *s, t_vec3 point, t_vec3 dir);
 t_vec3				get_normal(t_obj *s, t_vec3 point, t_vec3 dir);
 t_vec3				get_color(t_obj *s);
 
-t_obj				*obj_cone_create (t_vec3 cent, t_vec3 norm, t_vec3 col, double angle);
-t_obj				*obj_cyli_create (t_vec3 cent, t_vec3 norm, t_vec3 col, double rad);
-t_obj				*obj_plane_create (t_vec3 norm, t_vec3 col, double dist);
-t_obj				*obj_sphere_create (t_vec3 cent, t_vec3 col, double rad);
+t_obj				*obj_cone_create
+(t_vec3 cent, t_vec3 norm, t_vec3 col, double angle);
+t_obj				*obj_cyli_create
+(t_vec3 cent, t_vec3 norm, t_vec3 col, double rad);
+t_obj				*obj_plane_create(t_vec3 norm, t_vec3 col, double dist);
+t_obj				*obj_sphere_create(t_vec3 cent, t_vec3 col, double rad);
 
 void				push_list(t_node **head, t_obj *obj);
 
@@ -141,7 +157,7 @@ int					get_int(int fd);
 double				get_double(int fd);
 t_vec3				get_vector(int fd);
 t_vec3				get_rot(int fd, t_vec3 vec);
-t_vec3				rotate(t_vec3, t_vec3 rot);
+t_vec3				rotate(t_vec3 vec, t_vec3 rot);
 
 void				get_cones(t_all *all, int fd);
 void				get_planes(t_all *all, int fd);
@@ -157,7 +173,8 @@ void				parse(t_all *a);
 void				render(t_all *a);
 void				put_pixel(t_all *a, int x, int y, int color);
 void				trace_ray(t_all *a, int x, int y, t_vec3 direction);
-t_clos				get_closest_inter(t_all *a, t_vec3 point, t_vec3 direction, t_range r);
+t_clos				get_closest_inter
+(t_all *a, t_vec3 point, t_vec3 direction, t_range r);
 double				product(t_vec3 a, t_vec3 b);
 double				length(t_vec3 a);
 t_vec3				normalize(t_vec3 a);
