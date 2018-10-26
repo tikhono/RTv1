@@ -6,7 +6,7 @@
 /*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/25 14:47:06 by atikhono          #+#    #+#             */
-/*   Updated: 2018/10/25 14:47:51 by atikhono         ###   ########.fr       */
+/*   Updated: 2018/10/26 15:43:36 by atikhono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ double	get_double(int fd)
 {
 	double	res;
 	char	*line;
-	char 	*dot;
+	char	*dot;
 
 	if (!get_next_line(fd, &line))
 	{
