@@ -50,8 +50,7 @@ t_vec3	compute_color(t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
 			++i;
 			continue ;
 		}
-		intensity += compute_intensity(c_int.obj,
-				get_normal(s, point, dir), vec_l, a->d.light[i].intensity);
+		intensity += compute_intensity(c_int.obj, get_normal(s, point, dir), vec_l, a->d.light[i].intensity);
 		++i;
 	}
 	return (multiply(get_color(s), intensity));

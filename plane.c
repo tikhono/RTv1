@@ -24,26 +24,17 @@ static t_inter	get_inter_p(t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
 	return (inter);
 }
 
-int				get_plane_side(t_plane *plane, t_vec3 point)
-{
-	t_vec3	n;
-	t_vec3	point_p;
-	double	res;
-
-	n = multiply(plane->norm, 1 / length(plane->norm));
-	point_p = multiply(n, plane->dist);
-	res = product(n, substract(point_p, point));
-	if (res == 0)
-		return (0);
-	return (res > 0 ? 1 : -1);
-}
-
 static t_vec3	get_normal_p(t_obj *s, t_vec3 point, t_vec3 dir)
 {
 	t_plane	*plane;
+	double	dot;
 
 	plane = (void *)s;
-	return (plane->norm);
+	dot = product(plane->norm, dir);
+	if (dot < 0)
+		return (plane->norm);
+	else
+		return (multiply(plane->norm, -1));
 }
 
 static t_vec3	get_color_p(t_obj *s)
