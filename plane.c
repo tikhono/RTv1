@@ -6,7 +6,7 @@
 /*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/25 14:48:57 by atikhono          #+#    #+#             */
-/*   Updated: 2018/10/26 16:48:31 by atikhono         ###   ########.fr       */
+/*   Updated: 2018/10/26 17:04:39 by atikhono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static t_vec3	get_color_p(t_obj *s)
 {
 	t_plane	*plane;
 
-	palne = (void *)s;
+	plane = (void *)s;
 	return (plane->color);
 }
 
@@ -60,7 +60,7 @@ t_obj			*obj_plane_create(t_vec3 norm, t_vec3 col, double dist)
 	static t_interface	vtable = {get_inter_p, get_normal_p, get_color_p};
 	static t_obj		base = { &vtable };
 
-	*obj_plane = malloc(sizeof(*obj_plane));
+	obj_plane = malloc(sizeof(*obj_plane));
 	memcpy(&obj_plane->base, &base, sizeof(base));
 	obj_plane->norm = norm;
 	obj_plane->color = col;

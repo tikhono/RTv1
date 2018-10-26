@@ -6,14 +6,13 @@
 /*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/25 14:32:36 by atikhono          #+#    #+#             */
-/*   Updated: 2018/10/26 16:25:03 by atikhono         ###   ########.fr       */
+/*   Updated: 2018/10/26 18:03:05 by atikhono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-static t_inter	get_inter_s
-	(t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
+static t_inter	get_inter_s(t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
 {
 	t_sphere	*sphere;
 	t_inter		inter;
