@@ -53,10 +53,12 @@ double	get_double(int fd)
 	dot = ft_strchr(line, '.');
 	if (dot)
 		if (*(++dot) != '\0')
+		{
 			if (res < 0)
 				res -= ft_atoi(dot) / pow(10, ft_strlen(dot));
 			else
 				res += ft_atoi(dot) / pow(10, ft_strlen(dot));
+		}
 	free(line);
 	return (res);
 }
