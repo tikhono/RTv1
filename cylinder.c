@@ -6,13 +6,13 @@
 /*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/25 14:48:42 by atikhono          #+#    #+#             */
-/*   Updated: 2018/10/27 02:03:58 by atikhono         ###   ########.fr       */
+/*   Updated: 2018/10/27 02:23:12 by atikhono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-static t_inter	get_inter_c(t_all *a, t_obj *s, t_vec3 p, t_vec3 dir)
+static t_inter	get_inter_c(t_all *a, t_obj *s, t_vec3 p, t_vec3 d)
 {
 	t_cylinder	*c;
 	t_inter		inter;
@@ -22,10 +22,10 @@ static t_inter	get_inter_c(t_all *a, t_obj *s, t_vec3 p, t_vec3 dir)
 
 	c = (void *)s;
 	p = substract(p, c->center);
-	k1 = product(dir, dir) - product(dir, c->norm) * product(dir, c->norm);
-	k2 = (product(p, dir) - product(p, c->norm) * product(dir, c->norm));
-	k3 = product(p, p) - product(p, c->norm) *
-		product(p, c->norm) - c->radius * c->radius;
+	k1 = product(d, d) - product(d, c->norm) * product(d, c->norm);
+	k2 = product(p, d) - product(p, c->norm) * product(d, c->norm);
+	k3 = product(p, p) - product(p, c->norm) * product(p, c->norm)
+		- c->radius * c->radius;
 	if (k2 * k2 - k1 * k3 < 0)
 	{
 		inter.one = INFINITY;
@@ -41,16 +41,16 @@ static t_inter	get_inter_c(t_all *a, t_obj *s, t_vec3 p, t_vec3 dir)
 
 static t_vec3	get_normal_c(t_obj *s, t_vec3 point, t_vec3 dir)
 {
-	t_cylinder	*clos_cylinder;
+	t_cylinder	*cylinder;
 	t_vec3		oc;
 	t_vec3		normal;
 	double		prod;
 
-	clos_cylinder = (void *)s;
-	oc = substract(point, clos_cylinder->center);
-	prod = product(dir, clos_cylinder->norm) * product(oc, clos_cylinder->norm);
-	normal = substract(point, clos_cylinder->center);
-	normal = substract(normal, multiply(clos_cylinder->norm, prod));
+	cylinder = (void *)s;
+	oc = substract(point, cylinder->center);
+	prod = product(dir, cylinder->norm) * product(oc, cylinder->norm);
+	normal = substract(point, cylinder->center);
+	normal = substract(normal, multiply(cylinder->norm, prod));
 	normal = normalize(normal);
 	return (normal);
 }
