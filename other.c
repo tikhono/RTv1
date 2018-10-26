@@ -40,6 +40,7 @@ t_vec3	compute_color(t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
 	r.min = 0.0001;
 	r.max = 1;
 	i = 0;
+	intensity = 0;
 	while (i < a->d.light_arr_length)
 	{
 		vec_l = normalize(substract(a->d.light[i].center, point));

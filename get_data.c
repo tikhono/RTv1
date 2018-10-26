@@ -79,10 +79,10 @@ void	get_cylinders(t_all *all, int fd)
 	count = get_int(fd);
 	while (count > 0)
 	{
-		get_vector(fd);
-		get_vector(fd);
-		get_vector(fd);
-		get_double(fd);
+		a = get_vector(fd);
+		b = get_vector(fd);
+		c = get_vector(fd);
+		d = get_double(fd);
 		push_list(&all->d.obj_list, obj_cyli_create(a, b, c, d));
 		--count;
 	}

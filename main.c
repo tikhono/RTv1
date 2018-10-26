@@ -35,13 +35,13 @@ int		convert_to_int(t_vec3 color)
 
 	norm_col = 0;
 	color.x = color.x < 0 ? 0 : color.x;
-	norm_col += color.x > 255 ? 255 : color.x;
+	norm_col += color.x > 255 ? 255 : (int)color.x;
 	norm_col <<= 8;
 	color.y = color.y < 0 ? 0 : color.y;
-	norm_col += color.y > 255 ? 255 : color.y;
+	norm_col += color.y > 255 ? 255 : (int)color.y;
 	norm_col <<= 8;
-	color.y = color.z < 0 ? 0 : color.z;
-	norm_col += color.z > 255 ? 255 : color.z;
+	color.z = color.z < 0 ? 0 : color.z;
+	norm_col += color.z > 255 ? 255 : (int)color.z;
 	return (norm_col);
 }
 

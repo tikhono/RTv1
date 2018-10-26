@@ -2,7 +2,7 @@
 # define MAIN_H
 # define HEIGHT 777
 # define WIDTH 777
-# define BACKGROUND 16777215
+# define BACKGROUND 0x0
 
 # include <math.h>
 # include <stdio.h>
@@ -99,7 +99,6 @@ typedef struct		s_node
 
 typedef struct		s_data
 {
-	int				obj_arr_length;
 	int				light_arr_length;
 	char			*file;
 	double			viewport_size;
