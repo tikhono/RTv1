@@ -83,6 +83,7 @@ void	parse(t_all *a)
 	}
 	a->d.camera_pos = get_vector(fd);
 	a->d.camera_dir = get_vector(fd);
+	a->d.camera_dir = get_rot(fd, a->d.camera_dir);
 	get_cones(a, fd);
 	get_planes(a, fd);
 	get_spheres(a, fd);
