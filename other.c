@@ -43,7 +43,7 @@ t_vec3	compute_color(t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
 	intensity = 0;
 	while (i < a->d.light_arr_length)
 	{
-		vec_l = normalize(substract(a->d.light[i].center, point));
+		vec_l = substract(a->d.light[i].center, point);
 		c_int = get_closest_inter(a, point, vec_l, r);
 		if (c_int.obj != NULL)
 		{
