@@ -6,7 +6,7 @@
 /*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/25 14:31:01 by atikhono          #+#    #+#             */
-/*   Updated: 2018/10/25 14:31:24 by atikhono         ###   ########.fr       */
+/*   Updated: 2018/10/26 23:52:45 by atikhono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ t_vec3	compute_color(t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
 			++i;
 			continue ;
 		}
-		intensity += compute_intensity(c_int.obj, get_normal(s, point, dir), vec_l, a->d.light[i].intensity);
+		intensity += compute_intensity(c_int.obj,
+				get_normal(s, point, dir), vec_l, a->d.light[i].intensity);
 		++i;
 	}
 	return (multiply(get_color(s), intensity));

@@ -6,25 +6,26 @@
 /*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/25 14:48:42 by atikhono          #+#    #+#             */
-/*   Updated: 2018/10/26 16:43:12 by atikhono         ###   ########.fr       */
+/*   Updated: 2018/10/27 00:04:48 by atikhono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-static t_inter	get_inter_c(t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
+static t_inter	get_inter_c(t_all *a, t_obj *s, t_vec3 p, t_vec3 dir)
 {
-	t_cylinder *obj_cyli = (void *)s;
-	t_inter	inter;
-	t_vec3	oc;
-	double	k1;
-	double	k2;
-	double	k3;
+	t_cylinder	*c;
+	t_inter		inter;
+	double		k1;
+	double		k2;
+	double		k3;
 
-	oc = substract(point, obj_cyli->center);
-	k1 = product(dir, dir) - product(dir, obj_cyli->norm) * product(dir, obj_cyli->norm);
-	k2 = 2 * (product(oc, dir) - product(oc, obj_cyli->norm) * product(dir, obj_cyli->norm));
-	k3 = product(oc, oc) - product(oc, obj_cyli->norm) * product(oc, obj_cyli->norm) - obj_cyli->radius * obj_cyli->radius;
+	c = (void *)s;
+	p = substract(p, c->center);
+	k1 = product(dir, dir) - product(dir, c->norm) * product(dir, c->norm);
+	k2 = 2 * (product(p, dir) - product(p, c->norm) * product(dir, c->norm));
+	k3 = product(p, p) - product(p, c->norm) *
+		product(p, c->norm) - c->radius * c->radius;
 	if (k2 * k2 - 4 * k1 * k3 < 0)
 	{
 		inter.one = INFINITY;

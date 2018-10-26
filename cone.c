@@ -6,38 +6,34 @@
 /*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/25 14:39:32 by atikhono          #+#    #+#             */
-/*   Updated: 2018/10/26 16:35:52 by atikhono         ###   ########.fr       */
+/*   Updated: 2018/10/27 00:19:32 by atikhono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-static t_inter	get_inter_c(t_all *a, t_obj *s, t_vec3 point, t_vec3 dir)
+static t_inter	get_inter_c(t_all *a, t_obj *s, t_vec3 p, t_vec3 d)
 {
-	t_cone	*cone;
+	t_cone	*c;
 	t_inter	inter;
-	t_vec3	oc;
 	double	k1;
 	double	k2;
 	double	k3;
-	double	kk;
 
-	cone = (void *)s;
-	oc = substract(point, cone->center);
-	kk = tan(cone->angle * M_PI / 360);
-	kk = 1 + kk * kk;
-	k1 = product(dir, dir) - kk * product(dir, cone->norm) * product(dir, cone->norm);
-	k2 = 2 * (product(oc, dir) - kk * product(oc, cone->norm) * product(dir, cone->norm));
-	k3 = product(oc, oc) - kk * product(oc, cone->norm) * product(oc, cone->norm);
-	if (k2 * k2 - 4 * k1 * k3 < 0)
+	c = (void *)s;
+	p = substract(p, c->center);
+	k1 = product(d, d) - c->angle * product(d, c->norm) * product(d, c->norm);
+	k2 = product(p, d) - c->angle * product(p, c->norm) * product(d, c->norm);
+	k3 = product(p, p) - c->angle * product(p, c->norm) * product(p, c->norm);
+	if (4 * k2 * k2 - 4 * k1 * k3 < 0)
 	{
 		inter.one = INFINITY;
 		inter.two = INFINITY;
 	}
 	else
 	{
-		inter.one = (-k2 + sqrt(k2 * k2 - 4 * k1 * k3)) / 2 * k1;
-		inter.two = (-k2 - sqrt(k2 * k2 - 4 * k1 * k3)) / 2 * k1;
+		inter.one = (-k2 * 2 + sqrt(4 * k2 * k2 - 4 * k1 * k3)) / 2 * k1;
+		inter.two = (-k2 * 2 - sqrt(4 * k2 * k2 - 4 * k1 * k3)) / 2 * k1;
 	}
 	return (inter);
 }
