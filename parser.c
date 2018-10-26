@@ -24,7 +24,7 @@ int		get_int(int fd)
 	}
 	integer = ft_atoi(line);
 	free(line);
-	return (integer);
+	return (integer < 0 ? -integer : integer);
 }
 
 double	get_double(int fd)
@@ -45,27 +45,10 @@ double	get_double(int fd)
 t_vec3	get_vector(int fd)
 {
 	t_vec3	vec;
-	char	*line;
 
-	if (!get_next_line(fd, &line))
-	{
-		fprintf(stderr, "Incomplete data!");
-		exit(-1);
-	}
-	vec.x = (double)ft_atoi(line);
-	if (!get_next_line(fd, &line))
-	{
-		fprintf(stderr, "Incomplete data!");
-		exit(-1);
-	}
-	vec.y = (double)ft_atoi(line);
-	if (!get_next_line(fd, &line))
-	{
-		fprintf(stderr, "Incomplete data!");
-		exit(-1);
-	}
-	vec.z = (double)ft_atoi(line);
-	free(line);
+	vec.x = get_double(fd);
+	vec.y = get_double(fd);
+	vec.z = get_double(fd);
 	return (vec);
 }
 

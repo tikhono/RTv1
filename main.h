@@ -2,7 +2,7 @@
 # define MAIN_H
 # define HEIGHT 777
 # define WIDTH 777
-# define BACKGROUND 0x0
+# define BACKGROUND 0xffffff
 
 # include <math.h>
 # include <stdio.h>
