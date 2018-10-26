@@ -6,7 +6,7 @@
 /*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/25 14:39:32 by atikhono          #+#    #+#             */
-/*   Updated: 2018/10/27 01:47:41 by atikhono         ###   ########.fr       */
+/*   Updated: 2018/10/27 02:49:26 by atikhono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,15 @@ static t_inter	get_inter_c(t_all *a, t_obj *s, t_vec3 p, t_vec3 d)
 static t_vec3	get_normal_c(t_obj *s, t_vec3 point, t_vec3 dir)
 {
 	t_cone	*cone;
-	t_vec3	normal;
 	t_vec3	oc;
+	t_vec3	normal;
 	double	prod;
 
 	cone = (void *)s;
 	oc = substract(point, cone->center);
 	prod = product(dir, cone->norm) * product(oc, cone->norm);
 	normal = substract(point, cone->center);
-	normal = substract(normal, multiply(cone->norm, cone->angle * prod));
+	normal = substract(normal, multiply(cone->norm, prod * cone->angle));
 	normal = normalize(normal);
 	return (normal);
 }
