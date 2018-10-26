@@ -6,7 +6,7 @@
 /*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/25 14:39:32 by atikhono          #+#    #+#             */
-/*   Updated: 2018/10/27 00:19:32 by atikhono         ###   ########.fr       */
+/*   Updated: 2018/10/27 01:04:03 by atikhono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,7 @@ static t_vec3	get_normal_c(t_obj *s, t_vec3 point, t_vec3 dir)
 	oc = substract(point, cone->center);
 	prod = product(dir, cone->norm) * product(oc, cone->norm);
 	normal = substract(point, cone->center);
-	normal = substract(normal, multiply(cone->norm,
-				(1 + pow(tan(cone->angle * M_PI / 360), 2)) * prod));
+	normal = substract(normal, multiply(cone->norm, cone->angle * prod));
 	normal = normalize(normal);
 	return (normal);
 }

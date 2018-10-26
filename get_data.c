@@ -6,7 +6,7 @@
 /*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/25 14:39:14 by atikhono          #+#    #+#             */
-/*   Updated: 2018/10/27 00:16:35 by atikhono         ###   ########.fr       */
+/*   Updated: 2018/10/27 01:08:19 by atikhono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	get_cones(t_all *all, int fd)
 	{
 		a = get_vector(fd);
 		b = get_vector(fd);
+		b = rotate(b, get_vector(fd));
 		c = get_vector(fd);
-		c = rotate(c, get_vector(fd));
 		d = get_double(fd);
 		d = tan(d * M_PI / 360);
 		d = 1 + d * d;
