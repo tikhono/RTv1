@@ -141,6 +141,7 @@ int					get_int(int fd);
 double				get_double(int fd);
 t_vec3				get_vector(int fd);
 t_vec3				get_rot(int fd, t_vec3 vec);
+t_vec3				rotate(t_vec3, t_vec3 rot);
 
 void				get_cones(t_all *all, int fd);
 void				get_planes(t_all *all, int fd);

@@ -15,22 +15,12 @@
 t_vec3	get_rot(int fd, t_vec3 vec)
 {
 	t_vec3	rot;
-	double	tempo;
 
 	rot = get_vector(fd);
 	rot.x *= (M_PI / 180);
 	rot.y *= (M_PI / 180);
 	rot.z *= (M_PI / 180);
-	tempo = vec.y;
-	vec.y = vec.y * cos(rot.x) - vec.z * sin(rot.x);
-	vec.z = tempo * sin(rot.x) + vec.z * cos(rot.x);
-	tempo = vec.x;
-	vec.x = vec.x * cos(rot.y) + vec.z * sin(rot.y);
-	vec.z = vec.z * cos(rot.y) - tempo * sin(rot.y);
-	tempo = vec.x;
-	vec.x = vec.x * cos(rot.z) - vec.y * sin(rot.z);
-	vec.y = tempo * sin(rot.z) + vec.y * cos(rot.z);
-	return (vec);
+	return (rotate(vec, rot));
 }
 
 int		get_int(int fd)

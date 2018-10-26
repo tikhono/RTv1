@@ -24,3 +24,19 @@ int		exit_mouse(void)
 	exit(0);
 	return (0);
 }
+
+t_vec3	rotate(t_vec3 vec, t_vec3 rot)
+{
+	double	tempo;
+
+	tempo = vec.y;
+	vec.y = vec.y * cos(rot.x) - vec.z * sin(rot.x);
+	vec.z = tempo * sin(rot.x) + vec.z * cos(rot.x);
+	tempo = vec.x;
+	vec.x = vec.x * cos(rot.y) + vec.z * sin(rot.y);
+	vec.z = vec.z * cos(rot.y) - tempo * sin(rot.y);
+	tempo = vec.x;
+	vec.x = vec.x * cos(rot.z) - vec.y * sin(rot.z);
+	vec.y = tempo * sin(rot.z) + vec.y * cos(rot.z);
+	return (vec);
+}

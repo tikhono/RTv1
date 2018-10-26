@@ -12,11 +12,14 @@
 
 #include "main.h"
 
-void	set_direction(t_all *a, int x, int y, t_vec3 *direction)
+t_vec3	get_ray_rot(t_all *a, int x, int y)
 {
-	direction->x = x * a->d.viewport_size / WIDTH;
-	direction->y = y * a->d.viewport_size / HEIGHT;
-	direction->z = a->d.projection_plane_z;
+	t_vec3	rot;
+
+	rot.x = x * a->d.viewport_size / WIDTH;
+	rot.y = y * a->d.viewport_size / HEIGHT;
+	rot.z = a->d.projection_plane_z;
+	return (rot);
 }
 
 void	put_pixel(t_all *a, int x, int y, int color)
@@ -49,7 +52,8 @@ void	render(t_all *a)
 {
 	int		x;
 	int		y;
-	t_vec3	direction;
+	t_vec3	rot;
+	t_vec3	ray;
 
 	x = -WIDTH / 2;
 	while (x <= WIDTH / 2)
@@ -57,9 +61,10 @@ void	render(t_all *a)
 		y = -HEIGHT / 2;
 		while (y <= HEIGHT / 2)
 		{
-			set_direction(a, x, y, &direction);
-			direction = normalize(direction);
-			trace_ray(a, x, y, direction);
+			rot = get_ray_rot(a, x, y);
+			ray = rotate(a->d.camera_dir, rot);
+			ray = normalize(ray);
+			trace_ray(a, x, y, ray);
 			++y;
 		}
 		++x;
