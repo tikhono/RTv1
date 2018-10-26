@@ -6,7 +6,7 @@
 /*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/25 14:39:32 by atikhono          #+#    #+#             */
-/*   Updated: 2018/10/27 01:04:03 by atikhono         ###   ########.fr       */
+/*   Updated: 2018/10/27 01:47:41 by atikhono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,15 @@ static t_inter	get_inter_c(t_all *a, t_obj *s, t_vec3 p, t_vec3 d)
 	k1 = product(d, d) - c->angle * product(d, c->norm) * product(d, c->norm);
 	k2 = product(p, d) - c->angle * product(p, c->norm) * product(d, c->norm);
 	k3 = product(p, p) - c->angle * product(p, c->norm) * product(p, c->norm);
-	if (4 * k2 * k2 - 4 * k1 * k3 < 0)
+	if (k2 * k2 - k1 * k3 < 0)
 	{
 		inter.one = INFINITY;
 		inter.two = INFINITY;
 	}
 	else
 	{
-		inter.one = (-k2 * 2 + sqrt(4 * k2 * k2 - 4 * k1 * k3)) / 2 * k1;
-		inter.two = (-k2 * 2 - sqrt(4 * k2 * k2 - 4 * k1 * k3)) / 2 * k1;
+		inter.one = (-k2 + sqrt(k2 * k2 - k1 * k3)) / k1;
+		inter.two = (-k2 - sqrt(k2 * k2 - k1 * k3)) / k1;
 	}
 	return (inter);
 }
