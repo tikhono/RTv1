@@ -26,6 +26,7 @@ void	get_cones(t_all *all, int fd)
 		a = get_vector(fd);
 		b = get_vector(fd);
 		c = get_vector(fd);
+		c = get_rot(fd, c);
 		d = get_double(fd);
 		push_list(&all->d.obj_list, obj_cone_create(a, b, c, d));
 		--count;
