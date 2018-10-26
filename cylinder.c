@@ -6,7 +6,7 @@
 /*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/25 14:48:42 by atikhono          #+#    #+#             */
-/*   Updated: 2018/10/27 00:04:48 by atikhono         ###   ########.fr       */
+/*   Updated: 2018/10/27 02:03:58 by atikhono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,18 @@ static t_inter	get_inter_c(t_all *a, t_obj *s, t_vec3 p, t_vec3 dir)
 	c = (void *)s;
 	p = substract(p, c->center);
 	k1 = product(dir, dir) - product(dir, c->norm) * product(dir, c->norm);
-	k2 = 2 * (product(p, dir) - product(p, c->norm) * product(dir, c->norm));
+	k2 = (product(p, dir) - product(p, c->norm) * product(dir, c->norm));
 	k3 = product(p, p) - product(p, c->norm) *
 		product(p, c->norm) - c->radius * c->radius;
-	if (k2 * k2 - 4 * k1 * k3 < 0)
+	if (k2 * k2 - k1 * k3 < 0)
 	{
 		inter.one = INFINITY;
 		inter.two = INFINITY;
 	}
 	else
 	{
-		inter.one = (-k2 + sqrt(k2 * k2 - 4 * k1 * k3)) / 2 * k1;
-		inter.two = (-k2 - sqrt(k2 * k2 - 4 * k1 * k3)) / 2 * k1;
+		inter.one = (-k2 + sqrt(k2 * k2 - k1 * k3)) / k1;
+		inter.two = (-k2 - sqrt(k2 * k2 - k1 * k3)) / k1;
 	}
 	return (inter);
 }
