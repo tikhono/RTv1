@@ -6,7 +6,7 @@
 /*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/25 14:39:14 by atikhono          #+#    #+#             */
-/*   Updated: 2018/10/25 14:39:15 by atikhono         ###   ########.fr       */
+/*   Updated: 2018/10/26 09:58:01 by atikhono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ void	get_light(t_all *all, int fd)
 	{
 		a = get_vector(fd);
 		b = get_double(fd);
-		all->d.light[count] = (t_light){a, b};
-		--count;
+		all->d.light[--count] = (t_light){a, b};
 	}
 }
