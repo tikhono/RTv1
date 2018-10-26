@@ -31,6 +31,7 @@ double	get_double(int fd)
 {
 	double	res;
 	char	*line;
+	char 	*dot;
 
 	if (!get_next_line(fd, &line))
 	{
@@ -38,6 +39,10 @@ double	get_double(int fd)
 		exit(-1);
 	}
 	res = (double)ft_atoi(line);
+	dot = ft_strchr(line, '.');
+	if (dot)
+		if (*(++dot) != '\0')
+			res += ft_atoi(dot) / pow(10, ft_strlen(dot));
 	free(line);
 	return (res);
 }
