@@ -12,16 +12,6 @@
 
 #include "main.h"
 
-t_vec3	get_ray_rot(t_all *a, int x, int y)
-{
-	t_vec3	rot;
-
-	rot.x = x * a->d.viewport_size / WIDTH;
-	rot.y = y * a->d.viewport_size / HEIGHT;
-	rot.z = a->d.projection_plane_z;
-	return (rot);
-}
-
 void	put_pixel(t_all *a, int x, int y, int color)
 {
 	int len;
@@ -48,12 +38,22 @@ int		convert_to_int(t_vec3 color)
 	return (norm_col);
 }
 
+t_vec3	get_dir(t_all *a, int x, int y)
+{
+	t_vec3	dir;
+
+	dir.x = x * a->d.viewport_size / WIDTH;
+	dir.y = y * a->d.viewport_size / HEIGHT;
+	dir.z = a->d.projection_plane_z;
+	dir = rotate(dir, a->d.camera_rot);
+	return (dir);
+}
+
 void	render(t_all *a)
 {
 	int		x;
 	int		y;
-	t_vec3	rot;
-	t_vec3	ray;
+	t_vec3	dir;
 
 	x = -WIDTH / 2;
 	while (x <= WIDTH / 2)
@@ -61,10 +61,8 @@ void	render(t_all *a)
 		y = -HEIGHT / 2;
 		while (y <= HEIGHT / 2)
 		{
-			rot = get_ray_rot(a, x, y);
-			ray = rotate(a->d.camera_dir, rot);
-			ray = normalize(ray);
-			trace_ray(a, x, y, ray);
+			dir = get_dir(a, x, y);
+			trace_ray(a, x, y, dir);
 			++y;
 		}
 		++x;

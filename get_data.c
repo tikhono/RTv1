@@ -26,7 +26,7 @@ void	get_cones(t_all *all, int fd)
 		a = get_vector(fd);
 		b = get_vector(fd);
 		c = get_vector(fd);
-		c = get_rot(fd, c);
+		c = rotate(c, get_vector(fd));
 		d = get_double(fd);
 		push_list(&all->d.obj_list, obj_cone_create(a, b, c, d));
 		--count;
@@ -44,7 +44,7 @@ void	get_planes(t_all *all, int fd)
 	while (count > 0)
 	{
 		a = get_vector(fd);
-		a = get_rot(fd, a);
+		a = rotate(a, get_vector(fd));
 		b = get_vector(fd);
 		c = get_double(fd);
 		push_list(&all->d.obj_list, obj_plane_create(a, b, c));
@@ -83,7 +83,7 @@ void	get_cylinders(t_all *all, int fd)
 	{
 		a = get_vector(fd);
 		b = get_vector(fd);
-		b = get_rot(fd, b);
+		b = rotate(b, get_vector(fd));
 		c = get_vector(fd);
 		d = get_double(fd);
 		push_list(&all->d.obj_list, obj_cyli_create(a, b, c, d));

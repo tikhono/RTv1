@@ -117,7 +117,7 @@ typedef struct		s_data
 	double			viewport_size;
 	double			projection_plane_z;
 	t_vec3			camera_pos;
-	t_vec3			camera_dir;
+	t_vec3			camera_rot;
 	t_node			*obj_list;
 	t_light			*light;
 }					t_data;
