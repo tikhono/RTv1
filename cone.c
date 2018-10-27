@@ -51,6 +51,8 @@ static t_vec3	get_normal_c(t_obj *s, t_vec3 point, t_vec3 dir)
 	normal = substract(point, cone->center);
 	normal = substract(normal, multiply(cone->norm, prod * cone->angle));
 	normal = normalize(normal);
+	if (product(normal, point) > 0.001)
+		return (multiply(normal, -1));
 	return (normal);
 }
 
