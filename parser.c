@@ -6,7 +6,7 @@
 /*   By: atikhono <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/25 14:47:06 by atikhono          #+#    #+#             */
-/*   Updated: 2018/10/26 23:55:49 by atikhono         ###   ########.fr       */
+/*   Updated: 2018/10/27 03:59:56 by atikhono         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_vec3	rotate(t_vec3 vec, t_vec3 rot)
 	tempo = vec.x;
 	vec.x = vec.x * cos(rot.z) - vec.y * sin(rot.z);
 	vec.y = tempo * sin(rot.z) + vec.y * cos(rot.z);
-	return (vec);
+	return (normalize(vec));
 }
 
 int		get_int(int fd)
